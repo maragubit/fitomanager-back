@@ -1,0 +1,75 @@
+{%extends 'core/base.html'%}
+{%load static%}
+{%block title%}Contactar{%endblock%}
+{%block content%}
+<script src='https://www.google.com/recaptcha/api.js'></script>
+    <section class="page-section about-heading">
+      <div class="container">
+        <div class="about-heading-content">
+          <div class="row">
+            <div class="col-xl-9 col-lg-10 mx-auto">
+              <div class="bg-faded rounded p-5">
+
+                <h2 class="section-heading mb-4">
+                  Consultas privadas:
+                </h2>
+
+
+                <!-- Formulario de contacto --> 
+                {% if 'ok' in request.GET %}
+                    <p>Consulta enviada correctamente.</p>
+                {% endif %}
+                {% if 'fail' in request.GET %}
+                <p>Se ha producido un error al enviar la consulta, por favor inténtelo de nuevo más adelante. Gracias</p>
+            {% endif %}      
+                <form action="" method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                        <label>Nombre y apellidos:</label>
+                        <div class="input-group">
+                            
+                            {{formulario.nombre}}
+                        </div>
+                        {{formulario.nombre.errors}}
+                    </div>
+                    <div class="form-group">
+                        <label>Email:</label>
+                        <div class="input-group">
+                           {{formulario.email}}
+                        </div>
+                        {{formulario.email.errors}}
+                        
+                    </div>
+                    <div class="form-group">
+                        <label>Consulta:</label>
+                        <div class="input-group">
+                            {{formulario.contenido}}
+                        </div>
+                        {{formulario.contenido.errors}}
+                    </div>
+                    <p hidden>{{captchaform}}</p>
+                    <div class="text-center">
+                            <input hidden type="submit" id="enviar" class="btn btn-primary btn-block py-2" value="Enviar">
+                        </div>
+               </form>
+                  <button class="btn btn-primary btn-block py-2" style="background-color:#243d25; border:none" onclick="enviarform()">Enviar</button>
+
+                  <!-- Fin formulario de contacto -->
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+<script>
+    function enviarform() {
+        var r = confirm("Al aceptar está dando su consentimiento para ceder sus datos personales.\nPuede ver la política de protección de datos en el apartado 'política de privacidad', cuyo enlace está disponible al final de la página web.")
+        if (r == true) {
+            document.getElementById("enviar").click()
+
+        }
+
+    };
+</script>
+{%endblock%}

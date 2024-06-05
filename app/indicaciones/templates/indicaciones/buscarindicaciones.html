@@ -1,0 +1,57 @@
+{%extends 'core/base.html'%}
+{%load static%}
+{%block title%}Lista patologías{%endblock%}
+{%block content%}
+<script src="{% static 'jQuery/jquery-3.3.1.min.js' %}"></script>
+<style>
+    .grid-item { width: 250px; margin:3%; height:200px; overflow:hidden;}
+.imagen {
+ width:250px;
+ height:100px;
+
+}
+a {
+ color: #253d25;
+}
+a:hover {
+    color: #4f9648;
+    text-decoration: none;
+}
+.btn-success {
+    color: #fff;
+    background-color: #243d25;
+    border-color: #28a745;
+}
+</style>
+<h1 style="text-align:center; color: #253d25;;">Buscador de patologías</h1>
+{%if patologias %}
+<form method="post" action="{%url 'buscarpatologia'%}" class="buscador" style="float: right; margin-right: 1%;">{% csrf_token %}
+    <p><input name="buscador" type="text"> <input class="btn btn-success" type="submit"value="buscar"></p>
+</form>
+<br>
+<br>
+<div class="grid" style="margin-left:5%; margin-right:5%;">
+    {%for patologia in patologias%}{%if patologia.modo_oculto == 'no'%}
+    <div class="grid-item">
+        <div>
+            <h4 style="text-align:center; color:#243d25;"><a href="{% url 'patologia' patologia.pk %}">
+                {{patologia.nombre}}
+            </a></h4>
+        </div>
+        <div style=" text-align:center;">
+            <a href="{% url 'patologia' patologia.pk %}"><img style="border-radius:5%;" class="imagen" src="{{patologia.imagen.url}}" alt="{{patologia.nombre}}"></a>
+        </div>
+
+        <div onclick="location.href='{%url 'patologia' patologia.pk %}';" style="text-align:justifyheight:60px; border-radius:5%;">
+            <h6>{{patologia.sintomas}}</h6>
+        </div>
+    </div>
+    {%endif%}{%endfor%}
+</div>
+{%else%}
+<br>
+<br>
+<h6 style="text-align:center">Lo sentimos, no se ha encontrado ningún resultado.</h6>
+{%endif%}
+
+{%endblock%}

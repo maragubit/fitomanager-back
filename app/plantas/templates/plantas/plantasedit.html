@@ -1,0 +1,354 @@
+{%extends 'core/base.html'%}
+{%load static%}
+{% block title %} {{planta.nombre}} {%endblock%}
+{%block content%}
+<script src="{% static 'jQuery/jquery-3.3.1.min.js' %}"></script>
+<script src="{% static 'star-rating/star-rating.js' %}"></script>
+<br>
+<style>
+a {
+ color: green;
+}
+a:hover {
+    color: #4f9648;
+    text-decoration: none;
+}
+#productos {
+ color: #253d25;
+}
+#productos:hover {
+    color: #4f9648;
+    text-decoration: none;
+}
+h3.titulo {
+    text-align: center;
+    color: darkgreen;
+    }
+
+    img.imagenproducto {
+    width: 150px;
+    height: 150px;
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+    }
+
+    .producto {
+    text-align:center;
+    }
+  #indicacionesplantasedit {
+    color:darkgreen;
+ }
+  #indicacionesplantasedit:hover {
+    color: yellowgreen;
+    text-decoration: none
+ }
+ .botoncomparador{
+    background: white;
+    border: none;
+    color: green;
+    text-align:left;
+}
+
+.botoncomparador:hover{
+    background: white;
+    border: none;
+    color: #53984b;
+
+}
+/* Style the tab */
+.tab {
+  overflow: hidden;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f1f1f1;
+  max-width:700px;
+}
+
+/* Style the buttons that are used to open the tab content */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 8px 10px;
+  transition: 0.3s;
+  font-size: 15px;
+  margin-right:2%;
+  border-radius: 3px;
+ }
+
+/* Change background color of buttons on hover */
+
+.tab button:hover {
+  background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+  border-top: none;
+  max-width:700px;
+}
+
+.btn-success {
+    color: #fff;
+    background-color: #243d25;
+    border-color: #28a745;
+    width:150px;
+}
+#comprar{
+background-image:url("/static/images/shopping-cart.png");
+background-repeat: no-repeat;
+background-position: left center;
+}
+
+</style>
+<div id="marco">
+
+
+    <div class="cuadrante">
+
+
+        <table class="tableplantasedit">
+            <tr>
+                <td>
+    <img id= "imgplanta" src="{{planta.imagen.url}}" alt="{{planta.nombre}}">
+                </td>
+                <td>
+                    <h3 class="tituloplanta">{{planta.nombre}}</h3>
+                    <h5 style="text-align:center;"><i>({{planta.especie}})</i></h5>
+    <div class="infoplanta">
+        <h4>Parte empleada: <span class="respuestainfoplanta">{{planta.droga}}</span></h4>
+        <h4>Indicada a partir de: <span class="respuestainfoplanta">{{ planta.get_edad_display}}</span></h4>
+        <h4>Embarazo: <span class="respuestainfoplanta">{{planta.get_embarazo_display}}</span></h4>
+        <h4>Lactancia: <span class="respuestainfoplanta">{{planta.get_lactancia_display}}</span></h4>
+        {% if planta.indicaciones.all %}<h4>Etiquetada en: {%for indicacion in planta.indicaciones.all%}{%if indicacion.modo_oculto == 'no' %} <a id="indicacionesplantasedit" href="{%url 'patologia' indicacion.pk%}"><span class="respuestainfoplanta">{{indicacion}}</span></a>{%else%}<span class="respuestainfoplanta">{{indicacion}}</span>{%endif%}{%if not forloop.last%}, {%endif%}{%endfor%}</h4>{%endif%}
+    </div>
+
+                </td>
+            </tr>
+
+        <table class="tableplantaseditsmall">
+            <tr>
+
+                    <td><h3 class="tituloplanta">{{planta.nombre}}</h3>
+                        <h5 style="text-align:center;"><i>({{planta.especie}})</i></h5><img id= "imgplanta" src="{{planta.imagen.url}}" alt="{{planta.nombre}}"></td>
+            </tr>
+                <tr>
+                    <td>
+                    <div class="infoplanta">
+                        <h4>Parte empleada: <span class="respuestainfoplanta">{{planta.droga}}</span></h4>
+                        <h4>Indicada a partir de: <span class="respuestainfoplanta">{{ planta.get_edad_display}}</span></h4>
+                        <h4>Embarazo: <span class="respuestainfoplanta">{{planta.get_embarazo_display}}</span></h4>
+                        <h4>Lactancia: <span class="respuestainfoplanta">{{planta.get_lactancia_display}}</span></h4>
+                        {% if planta.indicaciones.all %}<h4>Etiquetada en: {%for indicacion in planta.indicaciones.all%}{%if indicacion.modo_oculto == 'no' %} <a id="indicacionesplantasedit" href="{%url 'patologia' indicacion.pk%}"><span class="respuestainfoplanta">{{indicacion}}</span></a>{%else%}<span class="respuestainfoplanta">{{indicacion}}</span>{%endif%}{%if not forloop.last%}, {%endif%}{%endfor%}</h4>{%endif%}
+                    </div>
+                    </td>
+                </tr>
+        </table>
+    </div>
+    <div id="facebook" style="max-width: 700px; margin-top:2%;">
+    <iframe style="float:right;" src="https://www.facebook.com/plugins/share_button.php?href=http%3A%2F%2Fwww.fitomanager.com/{{request.path}}&layout=button&size=large&width=99&height=28&appId" width="99" height="28" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true" allow="encrypted-media"></iframe>
+    </div>
+        <br>
+    <br>
+<br>
+    <div class="tab">
+        <button id="pulsado" class="tablinks" onclick="openCity(event, 'London')">Indicaciones</button>
+        <button id="pulsado" class="tablinks" onclick="openCity(event, 'Jerez')">Eficacia</button>
+        <button class="tablinks" onclick="openCity(event, 'Paris')">Posología</button>
+        <button class="tablinks" onclick="mostrarmas()">Composición</button>
+        <button class="tablinks" onclick="mostrarmas2()">Acción</button>
+        <button class="tablinks" onclick="openCity(event, 'Barcelona')">Contraindicaciones</button>
+        <button class="tablinks" onclick="openCity(event, 'Cadiz')">Interacciones</button>
+    </div>
+    <button hidden id="compo" class="tablinks" onclick="openCity(event, 'Tokyo')">Composición</button>
+    <button  hidden id="accion" class="tablinks" onclick="openCity(event, 'Madrid')">Acción</button>
+    <!-- Tab content -->
+    <div id="London" class="tabcontent">
+        <div class='longinfoplanta' style="text-align:left;">
+            <p>
+            <h5 class="longinfoplanta"><img src="{% static 'images/indicaciones.jpg'%}" height="30px"> Indicaciones</h5>
+            <h6>{{planta.usos}}</h6>
+            </p></div>
+
+    </div>
+
+    <div id="Jerez" class="tabcontent">
+        <div class='longinfoplanta' style="text-align:left;">
+            <p>
+            <h5 class="longinfoplanta"><img src="{% static 'images/evidencia.png'%}" height="30px"> Eficacia</h5>
+            {%for evidencia in planta.evidencias.all%}
+            <h6>{%if evidencia.indicacion.modo_oculto == 'no'%}<a href="{%url 'patologia' evidencia.indicacion.id %}">{{evidencia.indicacion}}</a>{%else%}{{evidencia.indicacion}}{%endif%}: {{evidencia.nota}}/5 {%if evidencia.nota == 5%} -Los estudios científicos han demostrado que la planta es eficaz.{%endif%} {%if evidencia.nota == 4%} -Los estudios científicos indican que probablemente sea eficaz.{%endif%} {%if evidencia.nota == 3%} -El uso tradicional nos indica que la planta podría ser eficaz.{%endif%} {%if evidencia.nota == 2%} -No hay evidencias que indiquen que se pueda emplear.{%endif%}</h6>
+            {%endfor%}
+            </p></div>
+
+    </div>
+
+    <div id="Paris" class="tabcontent">
+        <div class='longinfoplanta' style="text-align:left;">
+            <p>
+            <h5 class="longinfoplanta"><img src="{% static 'images/tarro.jpg'%}" height="30px"> Posología</h5>
+            <h6>{{planta.posologia|safe}}</h6>
+            <p style="font-size: small;"><i>*Para entender mejor las dosis equivalentes haga click <a href="/blog/entrada/21/">aquí</a></i></p>
+            </p></div>
+    </div>
+
+    <div id="Tokyo" class="tabcontent">
+        <div class='longinfoplanta' style="text-align:left;">
+            <p>
+            <h5 class="longinfoplanta"><img src="{% static 'images/compo.jpg'%}" height="30px">Composición</h5>
+            <h6>{{planta.activos|safe}}</h6>
+            </p></div>
+    </div>
+
+    <div id="Madrid" class="tabcontent">
+        <p>
+        <h5><img src="{%static 'images/mecanismo.jpg'%}" height="30px"> Mecanismo de Acción:</h5>
+        <p>{{object.mecanismo|safe}}</p></p>
+    </div>
+
+
+    <div id="Barcelona" class="tabcontent">
+        <p>
+        <h5><img src="{%static 'images/danger.jpg'%}" height="30px"> Contraindicaciones, efectos adversos y advertencias</h5>
+        <p>{{object.contraindicaciones|safe}}</p></p>
+    </div>
+
+    <div id="Cadiz" class="tabcontent">
+        <p>
+        <h5><img src="{%static 'images/interacciones.jpg'%}" height="30px"> Interacciones</h5>
+        <p>{{object.interacciones|safe}}</p></p>
+    </div>
+    <hr>
+    <hr>
+    <br>
+
+    {%if productos%}
+    <h4 style="color:darkgreen; text-align:center"><img src="{% static 'images/podium.jpg'%}" height="50px"> Ranking de productos con {{planta.nombre}}:</h4>
+    <br>
+    <br>
+    <div class="container">
+        <div class="row">
+        {%for producto in productos%}
+
+        <div class="col-md-4 col-sm-6" style="margin-bottom:75px;">
+            <h5 style="color:green; text-align:center; height:46px; max-width:220px; margin-left:auto; margin-right:auto;"><a id="productos" href="{%url 'producto' producto.pk%}">{{producto.nombre}}</a></h5>
+            <a href="{%url 'producto' producto.pk%}"><img class="imagenproducto" src="{{producto.foto.url}}" alt="{{producto.nombre}}"></a>
+            <div style="height:32px;">
+                {%if producto.media2%}
+                <div class="my-rating" style="width:160px; margin-right:auto; margin-left:auto"><span style="float:right">{{producto.media2}}</span></div>
+                <script>
+              $(".my-rating").starRating({
+              initialRating: parseFloat({{producto.media2}})/2,
+              totalStars: 5,
+              starSize: 25,
+              readOnly: true
+            });
+            </script>
+                {%else%}<div style="min-height:61px;"></div>
+                {%endif%}
+            </div>
+            <div class="cuadropvp">
+                <h4 style="text-align:center;margin-bottom:5%;">{%if producto.pvp > 0 %}{{producto.pvp}}€{%else%}<i><span>Sin stock</span></i>{%endif%}</h4>
+                <div class="botones" style="min-height:75px">
+                    {%if producto.linkamazon%}{%if producto.pvp_amazon < producto.pvp_promofarma%}
+                    <div style="text-align:center">
+                        <button type="button" id="comprar" class="btn btn-success" onclick="window.open('{{producto.linkamazon}}','_blank')">Comprar</button>
+                    </div>
+                    {%endif%}{%endif%}
+                    {%if producto.linkpromofarma%}{%if producto.pvp_promofarma <= producto.pvp_amazon%}
+                    <div style="text-align:center">
+                        <button type="button" id="comprar" class="btn btn-success" onclick="window.open('https://www1.belboon.de/adtracking/03bc800966f204e0c6004b44.html/&deeplink=https://pp.promofarma.com/dynclick/promocionesfarma/?eaf-publisher=Belboon&eaf-name=ComparadoresB&eaf-creative=linkComparadoresB&eaf-creativetype=generico&eseg-name=afiliado&eseg-item=[TID]&eurl={{producto.linkpromofarma}}?utm_source=belboon&utm_campaign=belboonfeed&utm_medium=afiliacion&country_code=ES','_blank')">Comprar</button>
+                    </div>
+                    {%endif%}{%endif%}
+                </div>
+            </div>
+        </div>
+            {%endfor%}
+                </div>
+            </div>
+    <form hidden method="POST"  action="{%url 'comparador'%}">{% csrf_token %}
+        <div id="comparar" style="text-align:left; margin-top:-70px;">
+            <h6> Si no se decide, puede comparar los productos en el comparador fitomanager: <input class="btn btn-success" id="compararproductos" type="submit" value="comparar"></h6>
+        </div>
+        {%for producto in productos%}
+        <input hidden style="height: 20px; width: 20px;" type="checkbox"name="seleccion[]" value={{producto.id}} checked>
+        {%endfor%}
+    </form>
+
+    <form hidden style="margin-left:2%" method="POST" action="{%url 'filtrador'%}" style="display: inline-block;">{% csrf_token %}
+        <div hidden><input type="text" name="plantas" value={{planta.id}}>
+            <input type="text" name="indicaciones" value=""></div>
+        <h6 style="text-align:left"> Si desea ver todos los productos que tengan {{planta.nombre}}, puede verlos en: <input class="btn btn-success" id="vertodos" type="submit" value="ver todos"></h6>
+    </form>
+    {%endif%}
+
+    {%if productos|length >= 2 %}<div style="margin-left:5%;"><h6>Puede comparar estos productos en el <button type="button" id="comparar" onclick="comparar()" class="botoncomparador">comparador fitomanager</button>
+        {%if productos|length >= 4 %} o ver todos los productos que <button type="button" onclick="vertodos()" class="botoncomparador">contengan {{object.nombre}}</button>{%endif%}</h6></div>{%endif%}
+
+</div>
+
+
+<script>
+    function mostrarmas() {
+        var r = confirm("Contenido recomendado para profesionales sanitarios.\n¿Es usted profesional sanitario?")
+        if (r == true) {
+            document.getElementById("compo").click()
+        }
+
+    };
+
+    function mostrarmas2() {
+        var r = confirm("Contenido recomendado para profesionales sanitarios.\n¿Es usted profesional sanitario?")
+        if (r == true) {
+            document.getElementById("accion").click()
+            }
+
+    };
+
+    function comparar() {
+        document.getElementById("compararproductos").click()
+    }
+
+    function vertodos() {
+        document.getElementById("vertodos").click()
+    }
+
+
+    function openCity(evt, cityName) {
+  // Declare all variables
+  var i, tabcontent, tablinks;
+
+  // Get all elements with class="tabcontent" and hide them
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+
+  // Get all elements with class="tablinks" and remove the class "active"
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+
+  // Show the current tab, and add an "active" class to the button that opened the tab
+  document.getElementById(cityName).style.display = "block";
+  evt.currentTarget.className += " active";
+}
+
+document.getElementById("pulsado").click();
+</script>
+
+
+
+
+{%endblock%}

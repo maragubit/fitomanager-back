@@ -1,0 +1,44 @@
+{%extends 'core/base.html'%}
+{%load static%}
+{%block title%}Buscar blog{%endblock%}
+{%block content%}
+<style>
+.grid-item { width: 300px; margin:3%;}
+p {text-align:justify}
+a{color:green}
+</style>
+<h1 style="text-align:center; color:#243d25;" class="titulo2">Blog FitoManager</h1>
+<form method="post" class="buscador" style="float: right; margin-right: 1%; margin-top: -40px;">{% csrf_token %}
+    <p><input name="buscador" type="text"> <input class="btn btn-success" type="submit"value="buscar"></p>
+</form>
+<br>
+<br>
+    <div class="grid" style="margin-left:5%; margin-right:5%;">
+        {%for post in post%}
+        <div class="grid-item">
+            <h4 style="height:60px; text-align:center; color:#243d25;">{{post.title}}</h4>
+            <div>
+                <a class="leermas" href="{%url 'entrada' post.pk %}"><img class="imagenpost" src="{{post.image.url}}" alt="{{post.title}}"></a>
+            </div>
+
+            <div class="contenido">
+                {{post.content|safe}}
+            </div>
+            <a class="leermas" href="{%url 'entrada' post.pk %}">Leer más...</a>
+            <p class="publicado">
+
+                <em><span class="section-heading-under">Publicado por <em><b>{{post.author}}</b></em> en <em>{%for category in post.categories.all%}<a href="{% url 'category' category.id %}">{{category.name}}</a>{%if not forloop.last%},{%endif%}
+                  {%endfor%}
+                    <em>{%for subcategory in post.subcategories.all%}<a href="{% url 'subcategory' subcategory.id %}">{{subcategory.name}}</a>{%if not forloop.last%},{%endif%}{%endfor%}</em>
+                </em><em>({{post.published|date:"SHORT_DATE_FORMAT"}})</span></em>
+
+                <br>
+
+
+
+
+
+        </div>
+        {%endfor%}
+    </div>
+{%endblock%}

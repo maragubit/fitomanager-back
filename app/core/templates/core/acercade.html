@@ -1,0 +1,68 @@
+{%extends 'core/base.html'%}
+{%load static%}
+
+
+
+
+
+
+{%block title%}Acerca de{%endblock%}
+{%block content%}
+<style>
+#contenidoacercade {
+    margin-left:10%;
+
+}
+#acercadefoto {
+    float: left;
+    margin-right: 3%;
+    width:200px;
+
+}
+@media screen and (max-width: 600px){
+#contenidoacercade {
+    margin-left:2%;
+    margin-right:2%;
+
+}
+#acercadefoto {
+    width: 100px;
+
+
+
+}
+}
+
+#textoacercade {
+ max-width:900px;
+
+}
+
+
+</style>
+<div id="contenidoacercade">
+
+    <img id="acercadefoto" src="/static/images/fotoacercade.png"/>
+
+
+
+    <div id="textoacercade">
+        <p style="text-align: justify;">Mi nombre es Martín Agüera y soy farmacéutico especializado en fitoterapia.
+            En la rutina del día a día de un farmacéutico de oficina de farmacia tenemos poco tiempo
+            para atender a cada paciente. Esto conlleva a que gran parte de lo estudiado no se acaba empleando y se
+            queda en el olvido, sintiéndose uno con esa espinita clavada de no estar aprovechando al máximo lo
+            aprendido durante tantos años de estudio. Decidí hacer varios cursos de informática con la intención
+            de algún día tener un blog especializado en fitoterapia y así dedicarle más tiempo a mi verdadera pasión,
+            las plantas medicinales.</p>
+
+        <p>Tras mucho esfuerzo y muchísimas horas de dedicación, poco a poco esa idea inicial fue cogiendo forma.</p>
+
+        <p>Bienvenidos a Fitomanager.</p>
+
+            <p>Martín Agüera Bitaubé, farmacéutico colegiado 2933 (Cádiz)</p>
+    </div>
+</div>
+
+
+
+{%endblock%}

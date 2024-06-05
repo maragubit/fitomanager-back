@@ -1,0 +1,118 @@
+{%extends 'core/base.html'%}
+{%load static%}
+{%block title%}Comparador{%endblock%}
+{%block content%}
+<script src="{% static 'jQuery/jquery-3.3.1.min.js' %}"></script>
+<script src="{% static 'star-rating/star-rating.js' %}"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
+<style>
+.dataTables_wrapper {
+position: relative;
+clear: both;
+
+float:center;
+margin-bottom:5%;
+margin-top:5%;
+margin-left: 5%;
+margin-right: 5%;
+}
+table.dataTable {
+margin: 0 auto;
+clear: both;
+border-collapse: separate;
+border-spacing: 0;
+min-width:1000px;
+}
+th, td {
+
+text-align:center;
+}
+
+.cinco {
+color:green;
+}
+.cuatro{color:#58d658;}
+
+.tres{color:#caca22;}
+
+.dos{color:orange;}
+
+.uno{color:red;}
+#botoninformacion{
+    background-color: white;
+    border: none;
+}
+</style>
+
+<h2 style="text-align:center; color:#243d25;" class="titulo2">Comparador fitomanager</h2>
+<table id="table_id_comparador" class="display">
+    <thead>
+    <tr>
+        <th>Imagen</th>
+        <th>Valoración más alta</th>
+        <th>Precio</th>
+        <th>Eficacia <button id="botoninformacion" onclick="infoevidencias()"><h5><i style="color:darkgreen;" class="fa fa-info-circle"></i></h5></button></th>
+        <th>Laboratorio <button id="botoninformacion" onclick="infolab()"><h5><i style="color:darkgreen;" class="fa fa-info-circle"></i></h5></button></th>
+        <th>Estandarización <button id="botoninformacion" onclick="infoestandarizacion()"><h5><i style="color:darkgreen;" class="fa fa-info-circle"></i></h5></button></th>
+        <th>Punto extra <button id="botoninformacion" onclick="infopuntoextra()"><h5><i style="color:darkgreen;" class="fa fa-info-circle"></i></h5></th>
+
+
+    </tr>
+    </thead>
+    <tbody>
+    {%for producto in productos%}
+    <tr>
+    <td><a href="{%url 'producto' producto.id %}"><img src="{{producto.foto.url}}" style="border-radius:5px; margin-bottom: 5%;" width="135" height="135" title="{{producto.nombre}}"></a></td>
+    <td style="width:170px; min-width:170px; margin-right:3% text-align:left;"><div class="my-rating"> <span style="float:right">({{producto.media2}})</span></div>
+        <script>
+              $(".my-rating").starRating({
+              initialRating: parseFloat({{producto.media2}})/2,
+              totalStars: 5,
+              starSize: 25,
+              readOnly: true
+            });
+            </script></td>
+    <td><h5>{{producto.pvp}}€</h5></td>
+        <td>{%for evidencia in producto.evidencias.all %}<p></p><div style="display:inline-flex;">{{evidencia.indicacion}}: {%if evidencia.nota == 5 %}<h4 class="cinco">{{evidencia.nota}}</h4>{%endif%}{%if evidencia.nota == 4 %}<h4 class="cuatro">{{evidencia.nota}}</h4>{%endif%}{%if evidencia.nota == 3 %}<h4 class="tres">{{evidencia.nota}}</h4>{%endif%}{%if evidencia.nota == 2 %}<h4 class="dos">{{evidencia.nota}}</h4>{%endif%}{%if evidencia.nota == 1 %}<h4 class="uno">{{evidencia.nota}}</h4>{%endif%}</div></p>{%endfor%}</td>
+    <td>{%if producto.laboratorio == 5 %}<h4 class="cinco">{{producto.laboratorio}}</h4>{%endif%}{%if producto.laboratorio  == 4 %}<h4 class="cuatro">{{producto.laboratorio }}</h4>{%endif%}{%if producto.laboratorio  == 3 %}<h4 class="tres">{{producto.laboratorio}}</h4>{%endif%}{%if producto.laboratorio  == 2 %}<h4 class="dos">{{producto.laboratorio }}</h4>{%endif%}{%if producto.laboratorio  == 1 %}<h4 class="uno">{{producto.laboratorio }}</h4>{%endif%}</td>
+    <td>{%if producto.estandarizacion == 5 %}<h4 class="cinco">{{producto.estandarizacion}}</h4>{%endif%}{%if producto.estandarizacion  == 4 %}<h4 class="cuatro">{{producto.estandarizacion }}</h4>{%endif%}{%if producto.estandarizacion  == 3 %}<h4 class="tres">{{producto.estandarizacion}}</h4>{%endif%}{%if producto.estandarizacion  == 2 %}<h4 class="dos">{{producto.estandarizacion }}</h4>{%endif%}{%if producto.estandarizacion  == 1 %}<h4 class="uno">{{producto.estandarizacion }}</h4>{%endif%}</td>
+    <td><h5>{%if producto.puntoextra%}+ {{producto.puntoextra}} {%else%} 0 {%endif%}</h5> </td>
+
+    </tr>
+    {%endfor%}
+    </tbody>
+    <tfoot>
+    <tr>
+        <th>Imagen</th>
+        <th>Valoración</th>
+        <th>Precio</th>
+        <th>Eficacia</th>
+        <th>Laboratorio</th>
+        <th>Estandarización</th>
+        <th>Punto extra</th>
+
+
+    </tr>
+    </tfoot>
+</table>
+<p style="margin:1%;font-size: small;"><i>*El algoritmo que seguimos para la valoración fitomanager viene detallado
+    <a href="/blog/entrada/22">aquí</a>
+</i></p>
+
+<script>
+    function infoevidencias(){
+    alert("Eficacia: máximo 5 puntos:  (80% del total)\n\n0 Puntos: Las plantas presentes no son eficaces o no se cumple la dosis mínima a la que alguna de las plantas puede ser eficaz.\n\n3 Puntos: La planta medicinal presente de mayor evidencia se emplea por su uso tradicional.\n\n4 Puntos: Alguna de las plantas medicinales presentes, gracias a los estudios ciéntificos de los que disponemos, podría ser eficaz para tratar esta patología.\n\n5 Puntos: Alguna de las plantas medicinales presentes, gracias a los estudios ciéntificos de los que disponemos, es eficaz para tratar esta patología.")
+    }
+
+    function infolab(){
+    alert("Laboratorio: máximo 5 puntos:  (10% del total)\n\n1 Punto: No hay en internet ningún tipo de información sobre el laboratorio.\n\n2 Puntos: El laboratorio no posee una web oficial aunque hay información en internet.\n\n3 Puntos: El laboratorio tiene un sitio web oficial, con una amplia gama de productos pero sin información concreta sobre los productos en su web.\n\n4 Puntos: Web oficial + Amplia gama de productos + información detallada composición de productos.\n\n5 Puntos: Todo lo de los 4 puntos + estandarización de la mayoría de sus productos y materias primas propias o procedentes de cultivos ecológicos.")
+    }
+
+    function infoestandarizacion(){
+    alert("Estandarización: máximo 5 puntos:  (10% del total)\n\n1 Punto: No hay ninguna información sobre la concentración de las drogas.\n\n2 Puntos: Si se utilizan drogas enteras, se sabe su concentración. Si se utilizan extractos, se sabe la concentración pero no su ratio.\n\n3 Puntos: Se emplean extractos y se sabe concentración y ratio pero no vienen estandarizados, o se emplean drogas enteras estandarizadas.\n\n4 Puntos:  Se emplean extractos y el producto viene estandarizado en un grupo de componentes pero no en activos concretos.\n\n5 Puntos: Se emplean extractos y vienen estandarizado en activos concretos.")
+    }
+    function infopuntoextra(){
+    alert("Puntuación extra: máximo 0.5 punto:\n\n0,2 Punto extra: Innovación en tecnología farmacéutica.\n\n0,3 Punto extra: suplementación con vitaminas, minerales u otros componentes.")
+    }
+</script>
+{%endblock%}

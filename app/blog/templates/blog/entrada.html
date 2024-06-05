@@ -1,0 +1,33 @@
+{%extends 'core/base.html'%}
+{%load static%}
+{%block title%}{{object.title}}{%endblock%}
+{%block content%}
+<style>
+    #blogcontent{
+    overflow-x: scroll;
+
+    }
+</style>
+<div id="marco">
+<div class="tituloentrada">
+    <h2 style="padding-bottom:20px;"> {{object.title}} <span>({{object.published|date:"SHORT_DATE_FORMAT"}})</span></h2>
+    <img class="tituloentrada" src="{{object.image.url}}">
+</div>
+    <iframe style="float:right;margin-top: 1%;" src="https://www.facebook.com/plugins/share_button.php?href=http%3A%2F%2Fwww.fitomanager.com/{{request.path}}&layout=button&size=large&width=99&height=28&appId" width="99" height="28" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true" allow="encrypted-media"></iframe>
+    <br>
+    <br>
+    <div id="blogcontent">
+    <p>{{object.content|safe}}</p>
+
+    <p>
+
+        <em><span class="section-heading-under">Publicado por <em><b>{{post.author}}</b></em> en <em>{%for category in post.categories.all%}<a href="{% url 'category' category.id %}">{{category.name}}</a>{%if not forloop.last%},{%endif%}
+                  {%endfor%}
+
+                </em></span>
+    </p>
+    </div>
+    <br>
+    <img id="firma" src="{%static 'images/logo.png' %}" alt="Fitomanager">
+</div>
+{%endblock%}

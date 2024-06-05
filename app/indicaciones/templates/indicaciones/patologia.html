@@ -1,0 +1,345 @@
+{%extends 'core/base.html'%}
+{%load static%}
+{%block title%}{{object.nombre}}{%endblock%}
+{%block content%}
+<script src="{% static 'jQuery/jquery-3.3.1.min.js' %}"></script>
+<script src="{% static 'star-rating/star-rating.js' %}"></script>
+<style>
+    .grid{
+    max-width: 1000px;
+    }
+   .grid-item {
+     width: 220px;
+     margin:1%;
+     margin-bottom:5%;
+
+ }
+ #imagen{
+    max-width:700px;
+    margin-left:auto;
+    margin-right:auto;
+    display:block;
+
+
+ }
+    
+    img.imagenproducto {
+    width: 150px;
+    height: 150px;
+    margin-left:auto;
+    margin-right:auto;
+    display:block;
+    }
+.plantas-item {
+     width: 95px;
+     overflow: hidden;
+     margin:1%;
+     display: inline-block;
+     margin-bottom:40px;
+ }
+
+ img.imagenplanta {
+        width: 90px;
+        height: 90px;
+    }
+    .producto {
+    text-align:center;
+    }
+
+    a {
+ color: #253d25;
+}
+a:hover {
+    color: #4f9648;
+    text-decoration: none;
+}
+.botoncomparador{
+    background: white;
+    border: none;
+    color: green;
+    text-align:left;
+}
+
+.botoncomparador:hover{
+    background: white;
+    border: none;
+    color: #53984b;
+
+}
+/* Style the tab */
+.tab {
+  overflow: hidden;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f1f1f1;
+  max-width:900px;
+}
+
+/* Style the buttons that are used to open the tab content */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 8px 10px;
+  transition: 0.3s;
+  font-size: 15px;
+  margin-right:2%;
+  border-radius: 3px;
+ }
+
+/* Change background color of buttons on hover */
+
+.tab button:hover {
+  background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+  border-top: none;
+  max-width:900px;
+}
+
+.btn-success {
+    color: #fff;
+    background-color: #243d25;
+    border-color: #28a745;
+    width:150px;
+}
+#comprar{
+background-image:url("/static/images/shopping-cart.png");
+background-repeat: no-repeat;
+background-position: left center;
+}
+</style>
+<div id="marco">
+    <div class="tituloentrada">
+        <h2 style="padding-bottom:20px;"> {{object.nombre}}</h2>
+        <img id="imagen" class="tituloentrada" src="{{object.imagen.url}}">
+    </div>
+    <iframe style="float:right;margin-top: 1%;" src="https://www.facebook.com/plugins/share_button.php?href=http%3A%2F%2Fwww.fitomanager.com/{{request.path}}&layout=button&size=large&width=99&height=28&appId" width="99" height="28" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true" allow="encrypted-media"></iframe>
+    <br>
+    <br>
+    <br>
+    <div class="tab">
+        <button id="pulsado" class="tablinks" onclick="openCity(event, 'London')">Descripción</button>
+        <button class="tablinks" onclick="mostrarmas()">Etiología</button>
+        <button class="tablinks" onclick="openCity(event, 'Barcelona')">Fitoterapia</button>
+    </div>
+    <button hidden id="compo" class="tablinks" onclick="openCity(event, 'Tokyo')">Etiologia</button>
+    <!-- Tab content -->
+    <div id="London" class="tabcontent">
+        <br>
+        <h5 class="titulo2"><img src="{% static 'images/descripcion.jpg'%}" height="30px"> Descripción:</h5>
+        <div id="descripcion" style="height: 100px; overflow-y: hidden;">
+            <p>{{object.descripcion|safe}}</p>
+        </div>
+        <br>
+        <button class="btn-success" id="mostrarmasdes" onclick="mostrarmasdes()">Mostrar más</button>
+        <button class="btn-success" id="mostrarmenosdes" onclick="mostrarmenosdes()" style="display:none;">Mostrar menos</button>
+
+    </div>
+
+
+
+    <div id="Tokyo" class="tabcontent">
+        <br>
+        <h5 class="titulo2"><img src="{% static 'images/fisiologia.jpg'%}" height="30px"> Etiología/Fisiopatología</h5>
+        <div id="descripcion">
+            <p>{{object.fisiopatologia|safe}}</p>
+        </div>
+    </div>
+
+
+
+
+    <div id="Barcelona" class="tabcontent">
+        <br>
+        <h5 class="titulo2"><img src="{% static 'images/Fitomanagerlogo.png'%}" height="30px"> Fitoterapia</h5>
+        <div id="descripcion">
+            <p>{{object.fitoterapia|safe}}</p>
+        </div>
+    </div>
+    <hr>
+    <hr>
+    <br>
+    <div class="plantas">
+        <h4 style="text-align:center">Plantas empleadas en {{object}}</h4>
+        <br>
+    {% for planta in indicacion.indicacionplanta.all %}
+    <div class="plantas-item">
+        <a class="titulo2" style="color:#23773e; text-align:center;" href="{%url 'plantasedit' planta.id %}"><h6 style="min-height:40px;">{{planta}}</h6></a>
+        <a href="{%url 'plantasedit' planta.id %}"><img style="border-radius: 15px;" class="imagenplanta" src="{{planta.imagen.url}}" alt="{{planta.nombre}}"></a>
+        {%for evidencia in planta.evidencias.all%}
+        {%if evidencia.indicacion == object %}
+        <div class="my-rating{{evidencia.indicacion.pk}}" style="max-width: 220px;"><span id="media{{evidencia.indicacion.pk}}" style="float:right;"></span></div>
+        <script>
+            $(".my-rating"+{{evidencia.indicacion.pk}}).starRating({
+              initialRating: parseFloat({{evidencia.nota|safe}}).toFixed(2),
+              totalStars: 5,
+              starSize: 17,
+              readOnly: true
+            });
+        </script>
+        {%endif%}
+        {%endfor%}
+    </div>
+    {%endfor%}
+    </div>
+    <hr>
+    <hr>
+<br>
+    <h4 class="titulo2" style="text-align:center"><img src="{% static 'images/podium.jpg'%}" height="50px"> Ranking productos etiquetados en {{object.nombre}}: </h4>
+    <br>
+    <br>
+
+    <div class="container">
+        <div class="row">
+        {%for producto in productos%}
+
+        <div class="col-md-4 col-sm-6" style="margin-bottom:75px;">
+            <h6 style="color:green; text-align:center; height:38px; max-width:220px; margin-left:auto; margin-right:auto;"><a href="{%url 'producto' producto.pk%}">{{producto.nombre}}</a></h6>
+            <a href="{%url 'producto' producto.pk%}"><img class="imagenproducto" src="{{producto.foto.url}}" alt="{{producto.nombre}}"></a>
+            <div style="height:32px;">
+            {%if producto.media2%}
+                {%for evidencia in producto.evidencias.all%}
+                    {%if evidencia.indicacion == object %}
+                <div class="my-rating{{producto.pk}}" style="width:180px; margin-right:auto; margin-left:auto"><span id=" {{producto.pk}}" style="float:right">{{evidencia.nota}}</span></div>
+                {%endif%}
+                {%endfor%}
+                {%else%}
+                <div id="espacio" style="min-height:61px;"></div>
+                {%endif%}
+            </div>
+            <div class="cuadropvp">
+                <h4 style="text-align:center;margin-bottom:5%;">{%if producto.pvp > 0 %}{{producto.pvp}}€{%else%}<i><span>Sin stock</span></i>{%endif%}</h4>
+                <div class="botones" style="min-height:75px">
+                    {%if producto.linkamazon%}{%if producto.pvp_amazon < producto.pvp_promofarma%}
+                    <div style="text-align:center">
+                        <button type="button" id="comprar" class="btn btn-success" onclick="window.open('{{producto.linkamazon}}','_blank')">Comprar</button>
+                    </div>
+                    {%endif%}{%endif%}
+                    {%if producto.linkpromofarma%}{%if producto.pvp_promofarma <= producto.pvp_amazon%}
+                    <div style="text-align:center">
+                        <button type="button" id="comprar" class="btn btn-success" onclick="window.open('https://www1.belboon.de/adtracking/03bc800966f204e0c6004b44.html/&deeplink=https://pp.promofarma.com/dynclick/promocionesfarma/?eaf-publisher=Belboon&eaf-name=ComparadoresB&eaf-creative=linkComparadoresB&eaf-creativetype=generico&eseg-name=afiliado&eseg-item=[TID]&eurl={{producto.linkpromofarma}}?utm_source=belboon&utm_campaign=belboonfeed&utm_medium=afiliacion&country_code=ES','_blank')">Comprar</button>
+                    </div>
+                    {%endif%}{%endif%}
+                </div>
+            </div>
+        </div>
+        {%endfor%}
+    </div>
+    </div>
+<br>
+<br>
+<br>
+{%if productos|length >= 2 %}<div style="margin-top:-50px;"><h6>Puede comparar estos productos en el <button class="botoncomparador" type="button" id="comparar" onclick=comparar()>comparador fitomanager</button>
+    {%if productos|length >= 4 %} o ver todos los productos <button class="botoncomparador" type="button"  onclick=vertodos()>etiquetados en {{object.nombre}}</button>{%endif%}</h6></div>{%endif%}
+
+
+        <form hidden method="POST"  action="{%url 'comparador'%}">{% csrf_token %}
+            <br>
+        <div  id="comparar">
+            <input class="btn btn-success" type="submit" id="compararproductos" value="comparar estos productos">
+        </div>
+            {%for producto in productos%}
+                <input hidden style="height: 20px; width: 20px;" type="checkbox"name="seleccion[]" value={{producto.id}} checked>
+            {%endfor%}
+        </form>
+
+<br>
+<form  hidden style="margin-left:2%" method="POST" action="{%url 'filtrador'%}" style="display: inline-block;">{% csrf_token %}
+    <div hidden><input type="text" name="plantas" value="">
+        <input type="text" name="indicaciones" value={{object.id}}></div>
+    <input class="btn btn-success" id="vertodos" type="submit" value="ver todos los productos">
+</form>
+
+</div>
+
+
+<br>
+<script>
+var producto;
+var indicacion;
+var productos={{productosjson|safe}}
+for (producto in productos){
+var evidencia=parseFloat(document.getElementById(' '+productos[producto].pk).innerHTML);
+var media=parseFloat((evidencia*0.8)+(productos[producto].fields.laboratorio*0.1)+(productos[producto].fields.estandarizacion*0.1)+(productos[producto].fields.puntoextra/2)).toFixed(2)
+document.getElementById(' '+productos[producto].pk).innerHTML='';
+document.getElementById(' '+productos[producto].pk).innerHTML+=media+'/5';
+$(".my-rating"+productos[producto].pk).starRating({
+initialRating: parseFloat(media),
+totalStars: 5,
+starSize: 25,
+readOnly: true
+});
+}
+</script>
+<script>
+    function mostrarmas() {
+        var r = confirm("Contenido recomendado para profesionales sanitarios.\n¿Es usted profesional sanitario?")
+        if (r == true) {
+            document.getElementById("compo").click()
+        }
+
+    };
+
+
+
+    function mostrarmasdes() {
+
+            document.getElementById("descripcion").style.height='auto';
+            document.getElementById("mostrarmasdes").style.display='none';
+            document.getElementById("mostrarmenosdes").style.display='block';
+
+
+    };
+
+    function mostrarmenosdes() {
+            document.getElementById("descripcion").style.height='100px';
+            document.getElementById("mostrarmasdes").style.display='block';
+            document.getElementById("mostrarmenosdes").style.display='none';
+
+    }
+
+    function comparar() {
+        document.getElementById("compararproductos").click()
+    }
+
+    function vertodos() {
+        document.getElementById("vertodos").click()
+    }
+
+
+    function openCity(evt, cityName) {
+  // Declare all variables
+  var i, tabcontent, tablinks;
+
+  // Get all elements with class="tabcontent" and hide them
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+
+  // Get all elements with class="tablinks" and remove the class "active"
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+
+  // Show the current tab, and add an "active" class to the button that opened the tab
+  document.getElementById(cityName).style.display = "block";
+  evt.currentTarget.className += " active";
+}
+
+document.getElementById("pulsado").click();
+</script>
+    {%endblock%}

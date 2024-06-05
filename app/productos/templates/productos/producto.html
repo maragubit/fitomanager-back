@@ -1,0 +1,354 @@
+{%extends 'core/base.html'%}
+{%load static%}
+{%block title%}{{object.nombre}}{%endblock%}
+{%block content%}
+<script src="{% static 'jQuery/jquery-3.3.1.min.js' %}"></script>
+<script src="{% static 'star-rating/star-rating.js' %}"></script>
+<script src="{% static 'bootstrap-slider/bootstrap-slider.js' %}"></script>
+<style>
+.cuadropvp{
+width:230px;
+
+}
+
+.titulo2 {
+    color:green;
+
+    }
+
+
+
+.plantas-item {
+     width: 95px;
+     height: 130px;
+     overflow: hidden;
+     margin:1%;
+     display: inline-block;
+     border: black solid 1px;
+     border-radius: 15px;
+     background-color:#f1f1f1;
+ }
+
+ img.imagenplanta {
+        width: 93px;
+        height: 90px;
+    }
+
+
+#big {
+    max-width:1400px;
+    }
+
+
+.slider-selection{
+background-image: linear-gradient(to bottom, #f9f9f9 0%, #1c8233 100%)
+}
+a#indicacionesplantasedit {
+    color: green;
+}
+.puntuacion{
+text-align: left;
+}
+
+th {
+font-weight: initial;
+}
+
+#botoninformacion{
+    background-color: white;
+    border: none;
+}
+/* Style the tab */
+.tab {
+  overflow: hidden;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+}
+
+/* Style the tab */
+.tab {
+  overflow: hidden;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f1f1f1;
+  max-width:700px;
+}
+
+/* Style the buttons that are used to open the tab content */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 8px 10px;
+  transition: 0.3s;
+  font-size: 15px;
+  margin-right:2%;
+  border-radius: 3px;
+ }
+
+/* Change background color of buttons on hover */
+
+.tab button:hover {
+  background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+  border-top: none;
+  min-height:650px;
+}
+#derecha{
+float:right;
+width:600px;
+}
+@media (max-width: 600px) {
+.tabcontent {
+ min-height:50px;
+}
+#derecha{
+float:inherit;
+width:auto;
+}
+
+}
+.slider.slider-horizontal .slider-track {
+    height: 10px;
+    width: 100%;
+    margin-top: -5px;
+    top: 50%;
+    left: 0;
+}
+.slider-handle {
+    /* position: absolute; */
+    top: 0;
+    width: 0px;
+    height: 20px;
+    background-color: #337ab7;
+    background-image: -webkit-linear-gradient(top, #337ab7 0%, #2e6da4 100%);
+    background-image: -o-linear-gradient(top, #337ab7 0%, #2e6da4 100%);
+    background-image: linear-gradient(to bottom, #337ab7 0%, #2e6da4 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff337ab7', endColorstr='#ff2e6da4', GradientType=0);
+    background-repeat: repeat-x;
+    filter: none;
+    -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05);
+    border: 0px solid transparent;
+}
+.slider.slider-horizontal {
+    width: 150px;
+    height: 20px;
+}
+.btn-success {
+    color: #fff;
+    background-color: #243d25;
+    border-color: #28a745;
+    width:150px;
+}
+#comprar{
+background-image:url("/static/images/shopping-cart.png");
+background-repeat: no-repeat;
+background-position: left center;
+}
+</style>
+<br>
+
+<div id="contenido" style="max-width:950px; margin-left:1%;margin-right:1%">
+
+<div class="nombrefoto" style="max-width:250px, text-align:center">
+<h4 style="color:green;text-align:center; margin-left: auto; margin-right: auto;max-width:250px">{{object.nombre}}</h4>
+<img style="margin-left:auto;margin-right:auto; display: block;" width="200"  src="{{object.foto.url}}" alt="{{object.nombre}}">
+ <br>
+ <h4 style="text-align:center;margin-bottom:5%; margin-top:-5%">{{producto.pvp}}€</h4>
+ <div style=" text-align:center;">
+  {%if object.media2%}
+  <b>Mejor puntuación: {{object.media2}}/10</b>
+  <div class="my-rating"></div>
+
+  {%endif%}
+
+  <div class="botones" style="min-height:75px">
+   {%if producto.linkamazon%}{%if producto.pvp_amazon < producto.pvp_promofarma%}
+   <div style="text-align:center">
+    <button type="button" id="comprar" class="btn btn-success" onclick="window.open('{{producto.linkamazon}}','_blank')">Comprar</button>
+   </div>
+   {%endif%}{%endif%}
+   {%if producto.linkpromofarma%}{%if producto.pvp_promofarma <= producto.pvp_amazon%}
+   <div style="text-align:center">
+    <button type="button" id="comprar" class="btn btn-success" onclick="window.open('https://www1.belboon.de/adtracking/03bc800966f204e0c6004b44.html/&deeplink=https://pp.promofarma.com/dynclick/promocionesfarma/?eaf-publisher=Belboon&eaf-name=ComparadoresB&eaf-creative=linkComparadoresB&eaf-creativetype=generico&eseg-name=afiliado&eseg-item=[TID]&eurl={{producto.linkpromofarma}}?utm_source=belboon&utm_campaign=belboonfeed&utm_medium=afiliacion&country_code=ES','_blank')">Comprar</button>
+   </div>
+   {%endif%}{%endif%}
+  </div>
+ </div>
+
+ <br>
+</div>
+<div id="derecha">
+ <div class="tab">
+  <button id="pulsado" class="tablinks" onclick="openCity(event, 'London')">Descripción</button>
+  <button class="tablinks" onclick="openCity(event, 'Paris')">Composición</button>
+  <button class="tablinks" onclick="openCity(event, 'Tokyo')">Posología</button>
+  <button class="tablinks" onclick="openCity(event, 'Madrid')">Valoración</button>
+ </div>
+  <!-- Tab content -->
+ <div id="London" class="tabcontent">
+  <h5><img src="{%static 'images/descripcion.jpg'%}" height="20px"> Descripción</h5>
+  <p>{{object.descripcion}}</p>
+ </div>
+
+ <div id="Paris" class="tabcontent">
+  <h5><img src="{%static 'images/compo.jpg'%}" height="20px"> Composición</h5>
+  <p>{{object.composicion|safe}}</p>
+ </div>
+
+ <div id="Tokyo" class="tabcontent">
+  <h5><img src="{%static 'images/farmaceutico.jpg'%}" height="20px"> Posología:</h5>
+  <p>{{object.posologia}}</p>
+ </div>
+
+ <div id="Madrid" class="tabcontent">
+  <p><div id="tabla" style="width:auto;">
+   <br>
+   <h5><img src="{% static 'images/Fitomanagerlogo.png'%}" height="20px"> Valoración Fitomanager</h5>
+   <br>
+   {%if not object.evidencias.all%}{%if object.dosis.all%}
+   <h6>Este producto no cumple con la dosis mínima de ninguna de las plantas medicinales presentes en su composición para que pueda ser considerado eficaz.</h6>
+   {%endif%}
+   {%else%}
+   {%for evidencia in object.evidencias.all%}
+   <hr>
+<h6>Valoración para {{evidencia.indicacion}}:</h6>
+   <table style="max-width:400px;">
+    <tr>
+     <th><button id="botoninformacion" onclick="infoevidencias()"><i style="color:darkgreen;width: 10px;" class="fa fa-info-circle"></i></button>Eficacia:</th><th><input id="ex1{{evidencia.indicacion.pk}}" data-slider-id='ex1Slider' type="text" data-slider-min="1" data-slider-max="5" data-slider-step="1" data-slider-value="{{evidencia.nota}}" data-slider-enabled="false"/></th><th class="puntuacion"> {{evidencia.nota}}</th>
+    </tr>
+    <th><button id="botoninformacion" onclick="infolab()"><i style="color:darkgreen;width: 10px;" class="fa fa-info-circle"></i></button>Laboratorio:</th><th> <input id="ex2{{evidencia.indicacion.pk}}" data-slider-id='ex1Slider' type="text" data-slider-min="1" data-slider-max="5" data-slider-step="1" data-slider-value="{{object.laboratorio}}" data-slider-enabled="false"/></th><th class="puntuacion"> {{object.laboratorio}}</th>
+    <tr>
+     <th><button id="botoninformacion" onclick="infoestandarizacion()"><i style="color:darkgreen;width: 10px;" class="fa fa-info-circle"></i></button>Estandarización:</th><th> <input id="ex3{{evidencia.indicacion.pk}}" data-slider-id='ex1Slider' type="text" data-slider-min="1" data-slider-max="5" data-slider-step="1" data-slider-value="{{object.estandarizacion}}" data-slider-enabled="false"/></th><th class="puntuacion"> {{object.estandarizacion}}</th>
+    </tr>
+   </table>
+
+   {%if object.puntoextra%}
+  <p><button id="botoninformacion" onclick="infopuntoextra()"><i style="color:darkgreen;width: 10px;" class="fa fa-info-circle"></i></button>Puntuación extra:<span style="color: green;"> + {{object.puntoextra}}</span> </p>
+  {%endif%}
+  Puntuación media:
+  <div class="my-rating{{evidencia.indicacion.pk}}" style="max-width: 174px;"><span id="media{{evidencia.indicacion.pk}}" style="float:right;"></span></div>
+  <hr>
+ {%endfor%}
+{%endif%}
+
+  {%if object.valoracion%}
+  <h5>Observaciones:</h5>
+  <p>{{object.valoracion|safe}}</p>
+  {%endif%}
+ </div>
+ </div>
+</div>
+<div id="cuadroplantas" style="max-width:600px;margin-left:1%;">
+ <div class="plantas">
+  <h5>Plantas presentes en el producto</h5>
+  {% for planta in object.plantas.all %}
+
+  <div class="plantas-item" style="display: inline-block;">
+   <a href="{%url 'plantasedit' planta.id %}"><img style="border-radius: 15px;" class="imagenplanta" src="{{planta.imagen.url}}" alt="{{planta.nombre}}"></a>
+   <a class="titulo2" style="color:#23773e; text-align:center;" href="{%url 'plantasedit' planta.id %}"><h6>{{planta}}</h6></a>
+  </div>
+  {%endfor%}
+ </div>
+</div>
+</div>
+<br>
+</div>
+<script>
+    function infoevidencias(){
+    alert("Eficacia: máximo 5 puntos:  (80% del total)\n\n0 Puntos: Las plantas presentes no son eficaces o no se cumple la dosis mínima a la que alguna de las plantas puede ser eficaz.\n\n3 Puntos: La planta medicinal presente de mayor evidencia se emplea por su uso tradicional.\n\n4 Puntos: Alguna de las plantas medicinales presentes, gracias a los estudios ciéntificos de los que disponemos, podría ser eficaz para tratar esta patología.\n\n5 Puntos: Alguna de las plantas medicinales presentes, gracias a los estudios ciéntificos de los que disponemos, es eficaz para tratar esta patología.")
+    }
+
+    function infolab(){
+    alert("Laboratorio: máximo 5 puntos:  (10% del total)\n\n1 Punto: No hay en internet ningún tipo de información sobre el laboratorio.\n\n2 Puntos: El laboratorio no posee una web oficial aunque hay información en internet.\n\n3 Puntos: El laboratorio tiene un sitio web oficial, con una amplia gama de productos pero sin información concreta sobre los productos en su web.\n\n4 Puntos: Web oficial + Amplia gama de productos + información detallada composición de productos.\n\n5 Puntos: Todo lo de los 4 puntos + estandarización de la mayoría de sus productos y materias primas propias o procedentes de cultivos ecológicos.")
+    }
+
+    function infoestandarizacion(){
+    alert("Estandarización: máximo 5 puntos:  (10% del total)\n\n1 Punto: No hay ninguna información sobre la concentración de las drogas.\n\n2 Puntos: Si se utilizan drogas enteras, se sabe su concentración. Si se utilizan extractos, se sabe la concentración pero no su ratio.\n\n3 Puntos: Se emplean extractos y se sabe concentración y ratio pero no vienen estandarizados, o se emplean drogas enteras estandarizadas.\n\n4 Puntos:  Se emplean extractos y el producto viene estandarizado en un grupo de componentes pero no en activos concretos.\n\n5 Puntos: Se emplean extractos y vienen estandarizado en activos concretos.")
+    }
+    function infopuntoextra(){
+    alert("Puntuación extra: máximo 0.5 punto:\n\n0,2 Punto extra: Innovación en tecnología farmacéutica.\n\n0,3 Punto extra: suplementación con vitaminas, minerales u otros componentes.")
+    }
+
+
+    function openCity(evt, cityName) {
+  // Declare all variables
+  var i, tabcontent, tablinks;
+
+  // Get all elements with class="tabcontent" and hide them
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+
+  // Get all elements with class="tablinks" and remove the class "active"
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+
+  // Show the current tab, and add an "active" class to the button that opened the tab
+  document.getElementById(cityName).style.display = "block";
+  evt.currentTarget.className += " active";
+}
+
+document.getElementById("pulsado").click();
+</script>
+<script>
+var media2=parseFloat({{object.media2|safe}}/2).toFixed(2)
+$(".my-rating").starRating({
+  initialRating: media2,
+  totalStars: 5,
+  starSize: 25,
+  readOnly: true
+});
+var evidencias = {{evidenciasjson|safe}};
+for (evidencia in evidencias){
+ var nota=parseFloat(evidencias[evidencia].fields.nota)
+ var indicacion1=evidencias[evidencia].fields.indicacion.toString();
+ var media=parseFloat((nota*0.8)+({{object.estandarizacion}}*0.1)+({{object.laboratorio}}*0.1)).toFixed(2);
+  if ({{puntoextra|safe}}>0){
+  var puntoextra={{puntoextra|safe}};
+  console.log('aquiiiiiiiii');
+  media=parseFloat(media)+parseFloat(puntoextra/2);
+  media=parseFloat(media).toFixed(2)
+  };
+  $(".my-rating"+indicacion1).starRating({
+  initialRating: media,
+  totalStars: 5,
+  starSize: 25,
+  readOnly: true
+});
+document.getElementById("media"+indicacion1).innerHTML+=media+'/5'
+}
+</script>
+
+<script>
+var evidencias = {{evidenciasjson|safe}}
+for (evidencia in evidencias){
+   var indicacion=evidencias[evidencia].fields.indicacion.toString()
+$("#ex1"+indicacion).slider({
+	tooltip: 'always'
+});
+$("#ex2"+indicacion).slider({
+	tooltip: 'always'
+});
+$("#ex3"+indicacion).slider({
+	tooltip: 'always'
+});
+}
+</script>
+{%endblock%}

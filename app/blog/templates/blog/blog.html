@@ -1,0 +1,92 @@
+{%extends 'core/base.html'%}
+{%load static%}
+{%block title%}Blog{%endblock%}
+{%block content%}
+<style>
+    .grid-item { width: 300px; margin:3%;}
+    .page-item.active .page-link {
+    z-index: 1;
+    color: #fff;
+    background-color: #243d25;
+    border-color: #243d25;
+}
+.page-link {
+    position: relative;
+    display: block;
+    padding: .5rem .75rem;
+    margin-left: -1px;
+    line-height: 1.25;
+    color: #243d25;
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+}
+a {color:green}
+p {text-align:justify}
+
+</style>
+<h2 style="text-align:center; color:#243d25;" class="titulo2">Blog fitomanager</h2>
+ <form method="post" action="{%url 'buscarblog'%}" class="buscador" style="float: right; margin-right: 1%;">{% csrf_token %}
+    <p><input name="buscador" class="form-class" type="text"> <button class="btn btn-success" style="background-color:#243d25" type="submit"><i class="fa fa-search"></i></button></p>
+    </form>
+<br>
+
+<p style="margin-left:5%">Categorias:{% for category in categories %} <a style="color:green" href="{% url 'category' category.id %}"><b>{{category.name}}</b></a>{%if not forloop.last%},{%endif%}{%endfor%}</p>
+<div class="grid" style="margin-left:5%; margin-right:5%;">
+{%for post in object_list%}
+    <div class="grid-item">
+                <h4 style="height:60px; text-align:center; color:#243d25;">{{post.title}}</h4>
+            <div>
+                <a class="leermas" href="{%url 'entrada' post.pk %}"><img class="imagenpost" src="{{post.image.url}}" alt="{{post.title}}"></a>
+            </div>
+
+              <div class="contenido">
+               {{post.content|safe}}
+              </div>
+              <a class="leermas" href="{%url 'entrada' post.pk %}">Leer más...</a>
+              <p class="publicado">
+                
+                <em><span class="section-heading-under">Publicado por <em><b>{{post.author}}</b></em> en <em>{%for category in post.categories.all%}<a href="{% url 'category' category.id %}">{{category.name}}</a>{%if not forloop.last%},{%endif%}
+                  {%endfor%}
+                    <em>{%for subcategory in post.subcategories.all%}<a href="{% url 'subcategory' subcategory.id %}">{{subcategory.name}}</a>{%if not forloop.last%},{%endif%}{%endfor%}</em>
+                </em><em>({{post.published|date:"SHORT_DATE_FORMAT"}})</span></em>
+
+<br>
+
+
+
+
+
+</div>
+{%endfor%}
+</div>
+<!-- Menú de paginación -->
+{% if is_paginated %}
+<nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+        <li class="page-item ">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">&laquo;</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" href="#" tabindex="-1">&laquo;</a>
+        </li>
+        {% endif %}
+        {% for i in paginator.page_range %}
+        <li class="page-item {% if page_obj.number == i %}active{% endif %}">
+            <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+        </li>
+        {% endfor %}
+        {% if page_obj.has_next %}
+        <li class="page-item ">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}">&raquo;</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" href="#" tabindex="-1">&raquo;</a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+{%endblock%}    

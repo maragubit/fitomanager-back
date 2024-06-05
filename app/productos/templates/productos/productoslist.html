@@ -1,0 +1,191 @@
+{%extends 'core/base.html'%}
+{%load static%}
+{%block title%}Productos naturales{%endblock%}
+{%block content%}
+<script src="{% static 'jQuery/jquery-3.3.1.min.js' %}"></script>
+<script src="{% static 'star-rating/star-rating.js' %}"></script>
+
+<style>
+
+th, td {
+
+  text-align:left;
+}
+a {
+color:darkgreen;
+}
+a:hover{
+    color:yellowgreen;
+    text-decoration: none;
+}
+
+.plantas-item {
+     overflow: hidden;
+     border-radius:15px;
+     background-color:#f1f1f1;
+ }
+
+ img.imagenplanta {
+        width: 130px;
+        height: 130px;
+        margin-left:auto;
+        margin-right:auto;
+        display:block;
+    }
+
+
+
+ .contenidoproductos {
+ margin-left: auto;
+ margin-right: auto;
+ }
+ label {
+    display: inline-block;
+    margin-bottom: .5rem;
+    margin-right: 1%;
+}
+select {
+    margin-right: 5%;
+}
+#comparar {
+    width: 300px;
+}
+.page-item.active .page-link {
+    z-index: 1;
+    color: #fff;
+    background-color: #243d25;
+    border-color: #243d25;
+}
+.page-link {
+    position: relative;
+    display: block;
+    padding: .5rem .75rem;
+    margin-left: -1px;
+    line-height: 1.25;
+    color: #243d25;
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+}
+.btn-success {
+    color: #fff;
+    background-color: #243d25;
+    border-color: #28a745;
+    width:150px;
+}
+#comprar{
+background-image:url("/static/images/shopping-cart.png");
+background-repeat: no-repeat;
+background-position: left center;
+}
+.check {
+    height: 20px;
+    width: 20px;
+    top: -5px;
+    z-index: 1000;
+    left: -70px;
+    position: relative;
+}
+</style>
+<br>
+<div class="contenidoproductos">
+<h2 style="text-align:center; color:#243d25;" class="titulo2">Productos naturales</h2>
+    <hr>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-4" style="text-align:center; margin-left:auto; margin-right:auto; margin-bottom:25px;">
+                <form  method="POST" action="{%url 'filtrador'%}">{% csrf_token %}
+                    {{form.plantas.errors}}
+                    <div class="container"> <div class="row"><div class="col-sm-12"> <h6>{{form.plantas.label}}: {{form.plantas}}</h6></div></div></div>
+                    {{form.indicaciones.errors}}
+                    <div class="container"> <div class="row"><div class="col-sm-12"><h6>{{form.indicaciones.label}}: {{form.indicaciones}}</h6></div></div></div>
+                    <input class="btn btn-success" style="width:220px; text-align:center; margin-left:auto; margin-right:auto" type="submit" value="Filtrar">
+                </form>
+            </div>
+            <div class="col-sm-4">
+            </div>
+            <div class="col-sm-4">
+    <form method="post" action="{%url 'buscarproducto'%}" class="buscador" style="float: right; margin-right: 1%;">{% csrf_token %}
+        <input class="form-class" name="buscador" type="text"> <button style="width:auto" type="submit" class="btn btn-success"><i class="fa fa-search"></i></button>
+    </form>
+            </div>
+        </div>
+    </div>
+    <hr>
+<br>
+<form method="POST"  action="{%url 'comparador'%}">{% csrf_token %}
+
+    <div class="container">
+        <div class="row">
+    {%for producto in object_list%}
+        <div class="col-md-4" style="height:400px; width:220px; position:inherit; text-align:center; margin-left:auto; margin-right:auto">
+            <h6 style="text-align:center; height:38px; overflow:hidden; width:220px; margin-left:auto;margin-right:auto"><a href="{%url 'producto' producto.pk %}">{{producto.nombre}}<a/> </h6>
+            <div class="container"><input class="check" type="checkbox"name="seleccion[]" value={{producto.id}}><a  href="{%url 'producto' producto.pk %}"> <img class="imagenplanta" src="{{producto.foto.url}}"title="{{producto.nombre}}"  style="border-radius:5px; margin-bottom: 1%;"></a></div>
+            <br>
+            <h4 style="text-align:center;margin-bottom:5%; margin-top:-5%">{%if producto.pvp > 0 %}{{producto.pvp}}€{%else%}<i><span>Sin stock</span></i>{%endif%}</h4>
+            {%if producto.media2%}<div class="my-rating" style="width:160px; margin-right:auto; margin-left:auto"><span style="float:right">{{producto.media2}}</span></div>{%else%}<div style="height:31px"></div>{%endif%}
+            <script>
+              $(".my-rating").starRating({
+              initialRating: parseFloat({{producto.media2}})/2,
+              totalStars: 5,
+              starSize: 25,
+              readOnly: true
+            });
+            </script>
+            <div class="botones" style="min-height:75px">
+                {%if producto.linkamazon%}{%if producto.pvp_amazon < producto.pvp_promofarma%}
+                <div style="text-align:center">
+                <button type="button" id="comprar" class="btn btn-success" onclick="window.open('{{producto.linkamazon}}','_blank')">Comprar</button>
+                </div>
+                {%endif%}{%endif%}
+                {%if producto.linkpromofarma%}{%if producto.pvp_promofarma <= producto.pvp_amazon%}
+                <div style="text-align:center">
+                <button type="button" id="comprar" class="btn btn-success" onclick="window.open('https://www1.belboon.de/adtracking/03bc800966f204e0c6004b44.html/&deeplink=https://pp.promofarma.com/dynclick/promocionesfarma/?eaf-publisher=Belboon&eaf-name=ComparadoresB&eaf-creative=linkComparadoresB&eaf-creativetype=generico&eseg-name=afiliado&eseg-item=[TID]&eurl={{producto.linkpromofarma}}?utm_source=belboon&utm_campaign=belboonfeed&utm_medium=afiliacion&country_code=ES','_blank')">Comprar</button>
+                </div>
+                {%endif%}{%endif%}
+            </div>
+        </div>
+
+        <br>
+    {%endfor%}
+    </div>
+    </div>
+    <div style="text-align:center; margin-bottom: -3%;">
+        <input id="comparar" class="btn btn-success" type="submit" value="Comparar seleccionados">
+    </div>
+</form>
+    <br>
+    <br>
+</div>
+<br>
+<br>
+<!-- Menú de paginación -->
+{% if is_paginated %}
+<nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+        <li class="page-item ">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">&laquo;</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" href="#" tabindex="-1">&laquo;</a>
+        </li>
+        {% endif %}
+        {% for i in paginator.page_range %}
+        <li class="page-item {% if page_obj.number == i %}active{% endif %}">
+            <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+        </li>
+        {% endfor %}
+        {% if page_obj.has_next %}
+        <li class="page-item ">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}">&raquo;</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" href="#" tabindex="-1">&raquo;</a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+{%endblock%}

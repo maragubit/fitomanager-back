@@ -1,0 +1,524 @@
+
+
+body {
+    margin: 20px 0;
+    background: #FFFFFF;
+    font: "RooneySans-Regular", "Lucida Sans", "Lucida Grande", "Lucida Sans Unicode", "Trebuchet MS", sans-serif;
+    color: #999999;
+    margin-left: 5%;
+    margin-right: 5%;
+    }
+
+
+
+
+h1, h2, h3 {
+
+	color: #666666;
+}
+
+h2 {
+	font-size: 1.2em;
+}
+
+h3 {
+	margin: 0;
+	font-size: .875em;
+}
+
+p, blockquote, ul, ol {
+	margin-top: 0;
+	line-height: 180%;
+	text-align: justify;
+}
+span {
+    font-size: initial;
+    font-family: inherit;
+}
+@media  (max-width: 600px){
+p{text-align: left;}
+}
+
+a {
+	color: #A5B80D;
+}
+
+a:hover {
+	text-decoration: none;
+	color: green;
+}
+
+/* Header */
+
+#header {
+
+	height: 100px;
+    margin-left:4%;
+    margin-right:4%;
+}
+
+/* Logo */
+
+#logo {
+	float: left;
+	padding: 0 0 0 40px;
+
+}
+
+#logo h1 {
+	margin: 0;
+	padding: 0;
+	text-transform: none;
+	font-size: 36px;
+}
+
+#logo h2 {
+	margin: -5px 0 0 3px;
+	padding: 0;
+	font-size: 11px;
+	font-weight: normal;
+}
+
+#logo a {
+	text-decoration: none;
+	color: #A5B80D;
+	font-family: Papyrus,fantasy
+}
+
+/* Menu */
+
+#menu {
+	float: right;
+	padding: 20px 0 0 0;
+}
+
+#menu ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	line-height: normal;
+}
+
+#menu li {
+	display: inline;
+}
+
+#menu a {
+	display: block;
+	float: left;
+	height: 17px;
+	padding: 0 17px 0 19px;
+	text-decoration: none;
+	background: url(images/img02.gif) no-repeat left center;
+	color: #A5B80D;
+}
+
+#menu a:hover {
+	color: #FF6000;
+}
+
+#menu .first a {
+	background: none;
+}
+
+/* Content */
+
+#content {
+	width: 800px;
+	margin: 0 auto;
+}
+/* PORTADA --------------------------------------------------------*/
+#contenidoportada{
+    margin-left:13%;
+    margin-right:13%;
+    height: 100%;
+    display: flow-root;
+}
+@media  (max-width: 600px){
+
+#contenidoportada{
+    padding-left:3%;
+    padding-right:3%;
+    margin-left:0%;
+    margin-right:0%;
+    min-height: auto;
+
+
+}
+
+}
+#imagenportada{
+    max-width: 400px;
+}
+
+@media  (max-width: 600px){
+#imagenportada{
+    max-width: 300px;
+}
+}
+/* Welcome */
+
+#welcome {
+        float: left;
+        max-width: 470px;
+        margin-bottom: 20px;
+}
+@media  (max-width: 600px){
+#welcome {
+        float: none;
+
+}
+
+}
+
+#welcome .more {
+	padding-top: 15px;
+	border-top: 1px dashed #CCCCCC;
+}
+
+#welcome .more a {
+	padding-left: 15px;
+	background: url(images/img05.gif) no-repeat left center;
+}
+
+/* News */
+
+
+
+#news {
+	float: right;
+	max-width: 400px;
+	margin-bottom: 20px;
+}
+#whitespace{
+height:300px;
+}
+
+
+@media  (max-width: 1025px) {
+#news {
+
+        margin-bottom: 20px;
+        float:none;
+    }
+#whitespace {
+    height:20px;
+}
+}
+
+#news .lined {
+    max-height: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 3px;
+
+
+}
+
+#news .more {
+	margin: 0;
+	padding: 0;
+	border: none;
+}
+
+#news .more a {
+	padding-left: 15px;
+	background: url(images/img05.gif) no-repeat left center;
+}
+
+/* Feature */
+
+#feature {
+    background: #f1f1f1;
+    border: 2px solid #243d25;
+    border-radius:1%;
+    padding:2%;
+    width:110%
+    }
+@media screen and (max-width: 600px) {
+#feature {
+    padding-left: 3%;
+    width:auto;
+    }
+}
+#feature a {
+    text-decoration: none;
+	color: darkgreen;
+
+}
+#feature a:hover {
+  text-decoration: none;
+  color: yellowgreen;
+}
+#feature img {
+	margin-left: 20px;
+    width:120px;
+    height: 130px;
+}
+
+
+#feature h2 {
+	margin: 0;
+}
+
+
+
+
+/* plantasedit  -----------------------------------------*/
+
+
+
+
+
+#marco {
+        width: 900px;
+        margin-left: 10%;
+        margin-bottom: 5%;
+        padding-right: 5%;
+
+}
+@media screen and (max-width: 980px){
+  #marco {
+     width: auto;
+     padding-left:2%;
+     margin-left: 1%;
+  }
+ }
+.cuadrante {
+    border: solid 1px;
+    text-align: left;
+    padding: 2%;
+    width: 700px;
+    border-radius: 15px;
+    overflow: hidden;
+    background-color: #f1f1f1;
+    }
+@media screen and (max-width: 800px){
+    .cuadrante {
+        width: auto;
+        }
+}
+@media screen and (max-width: 600px){
+  .tableplantasedit {
+  display:none;
+  }
+}
+.tableplantaseditsmall{
+display:none
+}
+@media screen and (max-width: 600px){
+    .tableplantaseditsmall{
+    display:table;
+    }
+}
+#imgplanta{
+    padding:20px;
+    border-radius:30px;
+    width: 227px;
+    height: 227px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    }
+
+.tituloplanta {
+    text-align: -webkit-center;
+    color: #243d25;
+
+}
+.infoplanta {
+    padding-top: 15px;
+}
+
+h3.longinfoplanta {
+    color:darkgreen;
+
+
+
+}
+
+.respuestainfoplanta {
+
+    font-style: italic;
+    font-size: smaller;
+}
+
+/* Blog ------------------------------------------------------*/
+.titulo {
+    text-align: left;
+    padding-left: 3%;
+}
+
+.contenido {
+    width: 300px;
+    height: 100px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    margin-left: 3%;
+}
+
+p.publicado {
+    padding-left: 3%;
+    width: 300px;
+    text-align: left;
+
+}
+
+img.imagenpost {
+    width: 300px;
+    height: 150px;
+    text-align: ;
+
+}
+h2.titulo {
+    font-size: 20px;
+    min-height: 47px;
+}
+
+a.leermas {
+    margin-left: 3%;
+    color: green;
+}
+/* Entrada */
+
+.tituloentrada {
+    text-align: -webkit-center;
+    color: darkgreen;
+}
+img.tituloentrada{
+    width: 844px;
+    height: 300px;
+}
+@media screen and (max-width: 900px){
+img.tituloentrada{
+   width: 100%;
+   height: auto;
+}
+
+}
+#firma{
+    width:80%
+
+}
+@media screen and (max-width: 500px){
+ #firma{
+
+ display:none
+ }
+
+}
+
+
+
+.titulo2 {
+
+    color: #243d25;
+    }
+
+/* Producto template*/
+.nombrefoto{
+float:left;
+margin-right:7%;
+margin-left: 3%;
+}
+@media screen and (max-width: 600px){
+.nombrefoto{
+float:none;
+margin-right:2%;
+}
+}
+
+#fotoproducto {
+
+   max-width: 500px;
+   max-height:500px;
+}
+@media screen and (max-width: 600px){
+#fotoproducto {
+
+   width: 320px;
+   height:320px;
+}
+
+}
+
+.informacionproducto{
+    padding-right: 3%;
+    padding-left: 3%;
+
+}
+.informacionproducto h7{
+font-weight: bold;
+}
+
+.botonpromofarma{
+
+    background-color: #88c441;
+    color: white;
+    border-radius: 5%;
+    width: -webkit-fill-available;
+    margin-bottom: 3%;
+}
+.botonamazon{
+
+    background-color: white;
+    color: black;
+    border-radius: 5%;
+    margin-bottom:3%;
+    width: -webkit-fill-available;
+    background: url(/static/images/logoamazon.jpg) no-repeat;
+}
+
+#social {
+    text-align:center;
+    min-width: 130px;
+
+
+
+}
+                       /* footer */
+.footer {
+    border-top: solid black 2px;
+    border-bottom: solid black 2px;
+    background-color: yellowgreen;
+    position: absolute;
+     }
+
+
+#logofooter {
+    height:100px;
+    margin-top: 10px;
+}
+@media screen and (max-width: 500px){
+#logofooter {
+    height:70px;
+    max-width:300px;
+}
+
+}
+
+.fa {
+  font-size: 30px;
+  width: 50px;
+  text-align: center;
+  text-decoration: none;
+}
+
+/* Add a hover effect if you want */
+.fa:hover {
+  opacity: 0.7;
+}
+
+/* Set a specific color for each brand */
+
+
+.footer_privacidad{
+    margin-top:5%;
+}
+
+.footer_privacidad a{
+    color:black;
+    padding-left: 1%;
+}
+
+
