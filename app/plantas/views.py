@@ -10,6 +10,7 @@ import json
 from django.template.loader import render_to_string
 from django.http import HttpResponse
 from django.core import serializers
+from text_unidecode import unidecode
 
 
 
