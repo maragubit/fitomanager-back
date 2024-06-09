@@ -38,3 +38,6 @@ Thumbs.db
 *.wmv
 
 *.sqlite3
+settings.py
+temp/
+__pycache__*.pyc
