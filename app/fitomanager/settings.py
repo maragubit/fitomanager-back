@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'ze_1fo+0$)n+_ahgp)&*az9e&x$-_n5t6cr+&#8xtq788qnr)0'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['www.fitomanager.com','maragubit.pythonanywhere.com','fitomanager.com','127.0.0.1']
 
@@ -132,7 +132,7 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
     '/static/',
 ]
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
 MEDIA_URL= '/media/'
 MEDIA_ROOT= os.path.join(BASE_DIR,"media")
