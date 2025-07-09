@@ -11,6 +11,8 @@ dist/
 *.class
 
 
+#virtual env
+env_fitomanager/
 
 # JetBrains IDE
 .idea/
