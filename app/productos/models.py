@@ -4,106 +4,85 @@ from plantas.models import *
 from indicaciones.models import *
 from ckeditor.fields import RichTextField
 from django.core.validators import MaxValueValidator, MinValueValidator
-
+from .utils import scrapping_amazon_drasanvi, scrapping_amazon_solgar ,scrapping_amazon_soria, scrapping_amazon_biojoy
+import requests
+from bs4 import BeautifulSoup
 
 # Create your models here.
 
 
 class Producto(models.Model):
+    lab_LIST=(
+        ('Drasanvi','Drasanvi'),
+        ('Soria','Soria'),
+        ('Solgar','Solgar'),
+        ('Biojoy','Biojoy'),
+    )
 
-    nombre= models.CharField(unique=True, max_length=100)
+    nombre= models.CharField(unique=True, max_length=250)
+    fitomanager=models.BooleanField(default=False)
     descripcion= models.TextField(blank=True, null=True)
-    plantas= models.ManyToManyField('plantas.Planta',related_name='plantasproducto',blank=True)
-    indicaciones=models.ManyToManyField('indicaciones.Indicacion',blank=True, related_name='indicacionesproducto')
+    plantas= models.ManyToManyField('plantas.Planta',related_name='productos',blank=True)
     composicion= RichTextField(blank=True,null=True)
     posologia=models.TextField(blank=True, null=True)
-    dosis=models.ManyToManyField('productos.Dosisproducto',blank=True)
-    foto= models.ImageField(upload_to='productos')
-    linkamazon= models.URLField(blank=True, null=True)
-    pvp_amazon=models.DecimalField(blank=True, null=True, max_digits=5, decimal_places=2)
-    linkpromofarma=models.URLField(blank=True, null=True)
-    pvp_promofarma=models.DecimalField(blank=True, null=True, max_digits=5, decimal_places=2)
+    imagen= models.ImageField(upload_to='productos/', blank=True, null=True)
+    foto= models.URLField(blank=True, null=True)
+    link=models.URLField(blank=True, null=True)
     pvp= models.DecimalField(blank=True, null=True, max_digits=5, decimal_places=2)
-    valoracion=RichTextField(blank=True,null=True)
-    laboratorio= models.PositiveIntegerField(blank=True, null=True,validators=[MinValueValidator(1), MaxValueValidator(5)],)
-    estandarizacion= models.PositiveIntegerField(blank=True, null=True,validators=[MinValueValidator(1), MaxValueValidator(5)],)
-    puntoextra= models.DecimalField(blank=True, null=True,validators=[MinValueValidator(0), MaxValueValidator(1)],max_digits=2, decimal_places=1)
-    media2= models.DecimalField(blank=True, null=True,validators=[MinValueValidator(1), MaxValueValidator(11)],max_digits=3, decimal_places=1)
-    evidencias= models.ManyToManyField('plantas.Evidencia', related_name='productos',blank=True)
-
+    media= models.DecimalField(blank=True, null=True,validators=[MinValueValidator(1), MaxValueValidator(11)],max_digits=3, decimal_places=1)
+    laboratorio= models.CharField(max_length=50, choices=lab_LIST, blank=True, null=True)
 
 
     def __str__(self):
         return ('{}').format(self.nombre)
-
-    class Meta():
-        ordering = ['-media2','pvp']
-
-
+    
+    """ CAPTAR PVP DE PROMOFARMA"""
     def save(self, *args, **kwargs):
-        from decimal import Decimal
-        super().save(*args, **kwargs)
-        if self.dosis.all():
-            for dosis in self.dosis.all():
-                if dosis.dosis >= dosis.planta.dosis_efectiva:
-                    for evidencia in dosis.planta.evidencias.all():
-                        self.evidencias.add(evidencia)
-                        self.indicaciones.add(evidencia.indicacion)
-
-        if self.dosis.all() and not self.evidencias.all():
-            if self.indicaciones.all():
-                self.media2=((self.estandarizacion*0.1)+(self.laboratorio*0.1))*2
-                if self.puntoextra:
-                    self.media2=Decimal(self.media2) + self.puntoextra
-                    if self.media2 > 10:
-                        self.media2 = 10
-
+        if not self.link or self.fitomanager:
+            super(Producto, self).save(*args, **kwargs)
+            return
         else:
-            evidencias=[]
-            for evidencia in self.evidencias.all():
-                if evidencias:
-                    for evidencia1 in evidencias:
-                        if evidencia.nota>=evidencia1.nota:
-                            evidencias.remove(evidencia1)
-                            evidencias.append(evidencia)
-                else:
-                    evidencias.append(evidencia)
-            for evidencia in evidencias:
-                self.media2=((evidencia.nota*0.8)+(self.estandarizacion*0.1)+(self.laboratorio*0.1))*2
-                if self.puntoextra:
-                    self.media2=Decimal(self.media2) + self.puntoextra
-                    if self.media2 > 10:
-                         self.media2 = 10
-            super().save(*args, **kwargs)
-
-        if not self.dosis.all():
-            self.media2=None
-        if self.pvp_amazon is None:
-            self.pvp_amazon=999
-        if self.pvp_promofarma is None:
-            print('es cero')
-            self.pvp_promofarma=999
-
-        if self.pvp_promofarma<=self.pvp_amazon:
-            self.pvp=self.pvp_promofarma
+            headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/125.0.0.0 Safari/537.36"}
+            html = requests.get(self.link, headers=headers).text
+            soup = BeautifulSoup(html, "html.parser")
+        if (self.laboratorio=='Drasanvi'):
+            data= scrapping_amazon_drasanvi(soup)
+            self.descripcion= data['descripcion']
+            self.composicion= data['composicion']
+            self.posologia= data['posologia']
+        if (self.laboratorio=='Solgar'):
+            data= scrapping_amazon_solgar(soup)
+            self.descripcion= data['descripcion']
+            self.composicion= data['composicion']
+            self.posologia= data['posologia']
+        if (self.laboratorio=='Soria'):
+            data= scrapping_amazon_soria(soup)
+            self.descripcion= data['descripcion']
+            self.composicion= data['composicion']
+            self.posologia= data['posologia']
+        if (self.laboratorio=='Biojoy'):
+            data= scrapping_amazon_biojoy(soup)
+            self.descripcion= self.nombre
+            self.composicion= data['composicion']
+            self.posologia= data['posologia']
+        print(data)
+        self.nombre= soup.find("span", id="productTitle").text
+        price_entero = soup.find("span", class_="a-price-whole").text
+        price_decimal = soup.find("span", class_="a-price-fraction").text
+        image = soup.find("img", id="landingImage")
+        # Asegurarte de que existe antes de acceder al atributo
+        self.foto = image["src"] if image and "src" in image.attrs else None
+        price= price_entero + price_decimal
+        
+        if price:
+            self.pvp = float(price.replace(",", ".").strip())
         else:
-            self.pvp=self.pvp_amazon
-        if self.puntoextra is None:
-            self.puntoextra=0
-
-        super().save(*args, **kwargs)
-
-
-
-
-
-
-class Dosisproducto(models.Model):
-    planta=models.ForeignKey('plantas.Planta',on_delete=models.CASCADE,related_name='dosisproducto')
-    dosis=models.DecimalField(decimal_places=2,max_digits=5)
-    def __str__(self):
-        return ('{}: {} gramos').format(self.planta, self.dosis)
+            self.pvp = 0
+        super(Producto, self).save(*args, **kwargs)
 
     class Meta():
-        ordering = ['planta']
+        ordering = ['-media','pvp']
+
+
+
 

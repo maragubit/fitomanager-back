@@ -5,7 +5,7 @@
 
 
 
-{%block title%}fitomanager{%endblock%}
+{%block title%}FM backend{%endblock%}
 
 {%block content%}
 <style>
@@ -15,133 +15,14 @@
       max-width: 100%;
       height: auto;}
 </style>
-<script src="{% static 'jQuery/jquery-3.3.1.min.js' %}"></script>
-<script src="{% static 'slick/slick.min.js' %}"></script>
-<script src="{% static 'star-rating/star-rating.js' %}"></script>
-<br>
+
 <div id="contenidoportada">
     <br>
-
     <div class="container">
-        <div class="row">
-            <div class="col-md-6">
-        <video controls>
-            <source src="{% static 'images/videoportada.mp4' %}" type="video/mp4">
-        </video>
-        <br>
-        <br>
-        <p style="text-align:justify">Si eres amante de lo natural y deseas tratarte con plantas medicinales
-        pero no encuentras la planta medicinal que te haga sentir mejor; si
-        te pierdes entre infinidad de productos naturales,
-        tienes la sensación de que el producto que has comprado no te sirve o
-            te falta información y no sabes cómo utilizarlo,
-        bienvenido a fitomanager, tu fitoterapeuta de confianza.</p>
-        <p style="text-align:justify">Ofrecemos consultas privadas e información sobre cómo emplear las plantas medicinales para sentirte mejor y
-            comparamos los productos naturales del mercado contrastando su calidad. Todo ello de la mano de un farmacéutico especializado.</p>
-
-        <img style="height:90px;" src="{%static 'images/firma.png'%}">
-        <p><b>Martín Agüera Bitaubé</b></p>
-                <hr>
-        <br>
-                    <div id="feature" style="margin-bottom:20px;">
-                        <h2 style="text-align:center;" class="titulo2">Últimas plantas</h2>
-                        <div class="container-fluid" style="padding-left:2px;">
-                            <div class="row">
-                                <div class="col-md-8" style="text-align: left;">
-                                    <ol style="margin-top:2%; margin-left:0%; text-align:left;">
-                                        {%for planta in listaplantas%}
-                                        <li><a href="{%url 'plantasedit' planta.pk %}">{{planta.nombre}} <i style="font-size: smaller;">({{planta.especie}})</i></a></li>
-                                        {%endfor%}
-                                    </ol>
-                                </div>
-                                <div class="col-md-4">
-                                    <img style="border-radius:10px;" src=" {%for planta in plantaquery%}{{planta.imagen.url}}{%endfor%}" alt="{{fotoplanta.nombre}}">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            <div class="col-md-6">
-                <div id="news">
-                    <h2 class="titulo2">Últimas entradas del Blog</h2>
-                    {%for entrada in listablog%}
-                    <div class="noticia">
-                        <h4 style="color:#4f9647">{{entrada.title}}<span style="font-size:15px;">({{entrada.created|date:"SHORT_DATE_FORMAT"}})</span></h4>
-                        <div id='news' class="lined">{{entrada.content|safe}}</div>
-                        <p><a class="leermas" href="{%url 'entrada' entrada.pk %}">Leer más...</a></p>
-                        <hr>
-                    </div>
-                    {%endfor%}
-                    <hr>
-                    <div style="max-width:340px; text-align:center; margin-left:auto;margin-right:auto;">
-                        <div id='coin-slider'>
-                            {%for indicacion in indicaciones %}{%if indicacion.modo_oculto == 'no'%}
-                            <a href="{%url 'patologia' indicacion.pk %}">
-                                <img src='{{indicacion.imagen.url}}'>
-
-                                <span>
-                <div style="font-size: small; height:90px; width:320px; ; overflow:hidden;">
-                    <h5 style="text-align:left;">{{indicacion.nombre}}</h5>
-                    <p>{{indicacion.fitoterapia|safe}}</p>
-                </div>
-
-            </span>
-                            </a>           {%endif%}{%endfor%}
-                        </div>
-                    </div>
-                </div>
-
-
-        </div>
+        <h1>Fitomanager Backend</h1>
     </div>
-    </div>
-    <br>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-6">
-    <div class="whitespace" style="max-width:500px;">
-        <hr>
-        <h3 style="text-align:center;" class="titulo2">Últimos productos añadidos</h3>
-        <div class="multiple-items" style="width:95%; margin-left:2%; margin-right:2%">
 
-            {%for producto in productos%}
-            <div>
-                <br>
-                <a style="color:#4f9647" href="{%url 'producto' producto.pk%}"><h4 style="font-size: smaller; width:150px; text-align:center; margin-left:2%; height:48px;">{{producto.nombre}}</h4></a>
-                <a href="{%url 'producto' producto.pk%}"><img style="width:160px; height:160px;" class="imagenproducto" src="{{producto.foto.url}}" alt="{{producto.nombre}}"></a>
-                <p style="text-align: center; width:160px;"><b>{{producto.pvp}} €</b></p>{%if producto.media2%}
-                <div class="my-rating" style="margin-left:6%; margin-top:-4%;"></div>
-                <p style="text-align: center; width:160px; margin-top:-4%;">({{producto.media2}})</p>
-                {%endif%}
-                <script>
-              $(".my-rating").starRating({
-              initialRating: parseFloat({{producto.media2}})/2,
-              totalStars: 5,
-              starSize: 25,
-              readOnly: true
-            });
-            </script>
-
-
-
-            </div>
-
-            {%endfor%}
-        </div>
-    </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<script type="text/javascript">
-$('.multiple-items').slick({
-  infinite: true,
-  slidesToShow: 2,
-  slidesToScroll: 1,
-});
-</script>
+    
 
 
 {%endblock%}

@@ -2,7 +2,10 @@ from django.shortcuts import render, get_object_or_404
 from .models import Post,Category, SubCategory
 from django.views.generic import DetailView
 from django.views.generic import ListView
-
+from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework import filters
+from .serializers import BlogSerializer, CategorySerializer
 # Create your views here.
 
 class blog(ListView):
@@ -38,3 +41,19 @@ def buscadorblog(request,*args,**kwargs):
     busqueda= request.POST.get('buscador')
     post= Post.objects.filter(title__icontains=busqueda)|Post.objects.filter(content__icontains=busqueda)
     return render (request,"blog/buscarblog.html",{'post':post})
+
+class BlogApiView(viewsets.ModelViewSet):
+    queryset = Post.objects.all()
+    serializer_class = BlogSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]  # solo lectura
+    filter_backends = [filters.SearchFilter]
+    search_fields = ["title", "content"]
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context["request"] = self.request
+        return context
+    
+class CategoryApiView(viewsets.ModelViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]  # solo lectura

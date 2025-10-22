@@ -186,34 +186,9 @@ text-decoration: none;
 </style>
 
 <body>
-    <div class="topnav" id="myTopnav">
-        <a href="{%url 'portada'%}"><img  style="margin-top: -15%; margin-bottom: -15%;" border="0" alt="W3Schools" src="{%static 'images/logo.png'%}" width="200" height="60"></a>
-            <div id="letrasnav">
-                <a style="display:none;"></a>
-            <a href="{%url 'portada'%}">Portada</a>
-            <a href="{%url 'plantas'%}">Plantas medicinales</a>
-            <a href="{%url 'patologias'%}">Patologías</a>
-                <a href="{%url 'productos'%}">Productos</a>
-            <a href="{%url 'blog'%}">Blog</a>
-            <a href="{%url 'contact' %}">Consultas</a>
-            <a href="{%url 'acercade'%}">Acerca de</a>
-            {% if user.is_authenticated %}<a href="{%url 'admin:index'%}">Admin</a>{%endif%}
-            </div>
-            <a href="javascript:void(0);" style="font-size:15px;" class="icon" onclick="myFunction()">&#9776;</a>
-            </div>
-    <br>
+   
 
-    <script>
-function myFunction() {
-  var x = document.getElementById("myTopnav");
-  if (x.className === "topnav") {
-    x.className += " responsive";
-  } else {
-    x.className = "topnav";
-  }
-}
-</script>
-
+    
 
     <br>
     <br>
@@ -221,71 +196,6 @@ function myFunction() {
 {%endblock%}
 <br>
 <br>
-<div id="abajo">
-    <div id="promofarma_fito_grande">
-        <script type="text/javascript" src="https://www1.belboon.de/tracking/000144283.js"> </script>
 
-        <noscript><iframe src="https://www1.belboon.de/tracking/000144283.html" width="728" height="90" frameborder="0" scrolling="no"> <a href="https://www1.belboon.de/tracking/000144283/0.html" target="_blank"> <img src="https://www1.belboon.de/tracking/000144283.img" border=0 width="728" height="90" alt="" /> </a> </iframe> </noscript>
-    </div>
-    <div id="promofarma_fito_pequeño">
-        <script type="text/javascript" src="https://www1.belboon.de/tracking/000144284.js"> </script>
-        <noscript> <iframe src="https://www1.belboon.de/tracking/000144284.html" width="300" height="250" frameborder="0" scrolling="no"> <a href="https://www1.belboon.de/tracking/000144284/0.html" target="_blank"> <img src="https://www1.belboon.de/tracking/000144284.img" border=0 width="300" height="250" alt="" /> </a> </iframe> </noscript>
-    </div>
-</div>
-    <div class="footer" style="width:100%;">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-3"></div>
-                <div class="col-md-6" style="text-align:center;">
-                    <a style="margin-right:12px;" id="politicaprivacidad" href="{%url 'politicaprivacidad'%}"><b>Política de privacidad</b></a>
-                    <a id="politicaprivacidad" href="{%url 'politicaprivacidad'%}#cookies"><b>Política de Cookies</b></a>
-                    </div>
-                <div class="col-md-3">
-                    <div id="social">
-        <a target="_blank" style="font-size:40px; color:black" class="fa fa-facebook-square" title="sígueme en facebook" href="https://www.facebook.com/fitomanager"></a>
-        <a target="_blank" style="font-size:40px; color:black" class="fa fa-instagram" title="sígueme en instagram" href="https://www.instagram.com/fitomanager/?hl=es"></a>
-    </div>
-                </div>
-        </div>
-        <br>
-            <div class="row">
-                <div class="col-md-12" style="text-align:center">
-                    <img id="logofooter" src="{%static 'images/Fitomanager.png' %}" style="max-heigth:150px; margin-top:-3%;" alt="Fitomanager">
-                </div>
-        </div>
-        </div>
-</body>
-<script src="{% static 'jQuery/jquery-3.3.1.min.js' %}"></script>
-<script src="{% static 'Bootstrap/js/bootstrap.min.js' %}"></script>
-
-
-<!--Static files datatable -->
-<script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.20/r-2.2.3/sc-2.0.1/datatables.min.js"></script>
-<script src="{% static 'Datatable/cargartabla.js' %}"></script>
-<script src="{% static 'Datatable/tablacomparador.js' %}"></script>
-
-
-
-<!-- Mansory layout -->
-<script type="text/javascript" src="{%static 'Mansory/mansory.js'%}"></script>
-<script type="text/javascript" src="{%static 'Mansory/cargarmansory.js'%}"></script>
-<!-- Coin-slider -->
-<script type="text/javascript" src="{%static 'coin-slider/coin-slider.js'%}"></script>
-<script type="text/javascript" src="{%static 'coin-slider/cargarcoin.js'%}"></script>
-<!-- cookies bar -->
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/cookie-bar/cookiebar-latest.min.js?forceLang=es&always=1"></script>
-
-<script src="{% static 'bootstrap-slider/bootstrap-slider.js' %}"></script>
-<script src="{% static 'bootstrap-slider/bootstrap-slider-init.js' %}"></script>
-<script src="{% static 'slick/slick.min.js' %}"></script>
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-153090919-1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'UA-153090919-1');
-</script>
 
 </html>

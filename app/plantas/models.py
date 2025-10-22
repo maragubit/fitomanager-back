@@ -1,8 +1,13 @@
+from unittest import case
 from django.db import models
 from indicaciones.models import Indicacion
 from productos.models import Producto
 from django.dispatch import receiver
 from ckeditor.fields import RichTextField
+from PIL import Image
+import io
+from django.core.files.base import ContentFile
+import os
 
 # Create your models here.
 class Planta(models.Model):
@@ -36,7 +41,7 @@ class Planta(models.Model):
     dosis_efectiva=models.DecimalField(blank=True,null=True, max_digits=5, decimal_places=2)
     activos = RichTextField(blank=True,null=True)
     mecanismo = RichTextField(blank=True, null=True)
-    indicaciones = models.ManyToManyField('indicaciones.Indicacion',related_name='indicacionplanta',blank=True)
+    indicaciones = models.ManyToManyField('indicaciones.Indicacion',related_name='plantas',blank=True)
     evidencias= models.ManyToManyField('plantas.Evidencia', related_name='plantas',blank=True)
     contraindicaciones = RichTextField(blank=True, null=True)
     interacciones = RichTextField(blank=True, null=True)
@@ -46,13 +51,36 @@ class Planta(models.Model):
     imagen = models.ImageField(upload_to='plantas',blank=True, null=True)
     descripcion = RichTextField(blank=True, null=True)
     usos = models.TextField(blank=True, null=True)
-
+    
+    class Meta():
+            ordering = ['nombre']
 
     def __str__(self):
         return self.nombre
+
+    def save(self,*args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.imagen:
+            img_path = self.imagen.path
+            img = Image.open(img_path)
+
+            # Convertir a RGB si tiene alpha (transparencia)
+            if img.mode in ("RGBA", "P"):
+                img = img.convert("RGB")
+
+            # Crear nombre nuevo
+            webp_name = os.path.splitext(self.imagen.name)[0] + ".webp"
+            buffer = io.BytesIO()
+            img.save(buffer, format='WEBP', quality=85)
+
+            # Sobrescribir imagen con versión WebP
+            self.imagen.save(webp_name, ContentFile(buffer.getvalue()), save=False)
+            os.remove(img_path)  # Eliminar el archivo original
+
+            super().save(update_fields=['imagen'])  # Guardar con la nueva imagen
     
-    class Meta():
-        ordering = ['nombre']
+    
+    
 
 
 
@@ -64,13 +92,30 @@ class Evidencia(models.Model):
         (3,'tres'),
         (4,'cuatro'),
         (5,'cinco'),
+        (0,'sin calificar'),
     )
 
     indicacion=models.ForeignKey('indicaciones.Indicacion',related_name='evidencias', on_delete=models.CASCADE)
-    nota=models.IntegerField(choices=NOTA_CHOICES)
+    nota=models.IntegerField(choices=NOTA_CHOICES, default=0)
 
     def __str__(self):
         return ('{}: {}').format(self.indicacion.nombre,self.nota)
+    
+    def evidencia_texto(self):
+        nota=self.nota
+        match (nota):
+            case 1:
+                return 'Las evidencias indican que la planta no es eficaz'
+            case 2:
+                return 'No hay evidencias que indiquen que se pueda emplear'
+            case 3:
+                return 'El uso tradicional nos indica que la planta podría ser eficaz'
+            case 4:
+                return 'Los estudios científicos indican que probablemente sea eficaz'
+            case 5:
+                return 'Los estudios científicos han demostrado que la planta es eficaz'
+            case _:
+                return "planta pendiente de calificar para esta patología"
 
     class Meta():
         ordering = ['indicacion']

@@ -37,3 +37,9 @@ class Indicacion(models.Model):
     class Meta():
         ordering = ['nombre']
         verbose_name_plural= 'indicaciones'
+        
+    def get_products(self):
+        from plantas.models import Planta
+        plantas=Planta.objects.filter(indicaciones__id=self.id)
+        queryset = list({product for planta in plantas for product in planta.productos.all()})
+        return queryset

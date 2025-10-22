@@ -1,5 +1,8 @@
 from django.shortcuts import render
 from django.urls import reverse_lazy
+
+from plantas.serializers import PlantaSerializer
+from plantas.serializers import PlantaIndicacionesSerializer
 from .models import Planta
 from indicaciones.models import Indicacion
 from indicaciones.models import Departamento
@@ -11,8 +14,11 @@ from django.template.loader import render_to_string
 from django.http import HttpResponse
 from django.core import serializers
 from text_unidecode import unidecode
-
-
+from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.decorators import action
+from drf_yasg.utils import swagger_auto_schema
+from rest_framework import filters
 
 # Create your views here.
 
@@ -20,50 +26,31 @@ from text_unidecode import unidecode
 #-----------------Modelo ficha-------------------------------
 
 
-def plantas(request):
-    plantas=Planta.objects.all().order_by('nombre')
-    indicaciones=Indicacion.objects.all()
-    plantasjson=serializers.serialize('json',plantas)
-    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        patologia=request.POST.get('patologia')
-        value=request.POST.get('value')
-        from text_unidecode import unidecode
-        for planta in Planta.objects.all():
-            planta.nombre=unidecode(u'{}'.format(planta.nombre)).lower()
-            planta.especie=unidecode(u'{}'.format(planta.especie)).lower()
-            value=unidecode(u'{}'.format(value).lower())
-            plantas_list= Planta.objects.filter(nombre__contains=value)|Planta.objects.filter(especie__contains=value)|Planta.objects.filter(activos__contains=value)|Planta.objects.filter(usos__contains=value)
-            plantas_list=plantas_list.order_by('nombre')
-            if patologia != 'todas':
-                plantas_list=plantas_list.filter(indicaciones__id=patologia)
-            plantasjs=serializers.serialize('json',plantas_list)
-            return JsonResponse(data={'plantasjs': plantasjs})
-        else:
-            plantas_list=Planta.objects.filter(nombre__contains=value).order_by('nombre')|Planta.objects.filter(especie__contains=value).order_by('nombre')|Planta.objects.filter(activos__contains=value).order_by('nombre')|Planta.objects.filter(usos__contains=value).order_by('nombre')
-            if patologia != 'todas':
-                plantas_list=plantas_list.filter(indicaciones__id=patologia)
-            plantasjs=serializers.serialize('json',plantas_list)
-            return JsonResponse(data={'plantasjs': plantasjs})
-    return render(request,'plantas/plantaslist.html',{'plantasjson':plantasjson, 'indicaciones':indicaciones})
+class PlantasApiView(viewsets.ModelViewSet):
+    queryset = Planta.objects.all()
+    serializer_class = PlantaSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]  # solo lectura
+    filter_backends = [filters.SearchFilter]
+    search_fields = ["nombre", "especie"]
 
-
-
-
-
-
-class PlantaUpdate(UpdateView):
-    model = Planta
-    template_name = "plantas/plantasedit.html"
-    fields = "__all__"
-
-    def get_context_data(self, **kwargs):  # método para que aparezcan los votos y las estrellas en la puntuación:
-        context = super().get_context_data(**kwargs)
-        productos = self.object.plantasproducto.all()[:4]
-        context['productos'] = productos
-        return context
-
-
-
-def plantasetiqueta(request,**kwargs):
-    plantas=Planta.objects.filter(etiquetas=kwargs['pk'])
-    return render (request,'plantas/plantaslistetiqueta.html',{'plantas':plantas})
+    @swagger_auto_schema(
+        method='get',
+        operation_summary="Devuelve las 3 últimas plantas añadidas",
+        operation_description="API para devolver las 3 plantas añadidas",
+        responses={200: PlantaSerializer(many=True)},
+        tags=['plantas']
+    )
+    @action(detail=False, methods=["get"], url_path='plantasHome')
+    def plantasHome(self, request):
+        plantas = Planta.objects.all()[:3]
+        plantas = PlantaSerializer(plantas, many=True,context={'request': request}).data
+        return JsonResponse(plantas, safe=False)
+    
+    
+    @action(detail=False, methods=["get"], url_path='plantasTotal')
+    def plantasTotal(self, request):
+        self.pagination_class = None
+        plantas = Planta.objects.all()
+        plantas = PlantaSerializer(plantas, many=True,context={'request': request}).data
+        return JsonResponse(plantas, safe=False)
+    

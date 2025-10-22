@@ -16,21 +16,42 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path,include,re_path
 from django.conf import settings
+from rest_framework import permissions
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
+from django.conf.urls.static import static
+
+schema_view = get_schema_view(
+   openapi.Info(
+      title="Fitomanager API",
+      default_version='v1',
+      description="Documentación de la API",
+      terms_of_service="https://www.tuweb.com/terminos/",
+      contact=openapi.Contact(email="contacto@tuweb.com"),
+      license=openapi.License(name="MIT License"),
+   ),
+   public=True,
+   permission_classes=(permissions.AllowAny,),
+)
 
 
 
 urlpatterns = [
     path('admin89/', admin.site.urls),
     path('',include ('core.urls')),
-    path('plantas/',include ('plantas.urls')),
-    path('blog/',include ('blog.urls')),
-    path('fitoterapia/',include ('indicaciones.urls')),
-    path('productos/',include ('productos.urls')),
+    path('api/blog/',include ('blog.urls')),
+    path('api/indicaciones/',include ('indicaciones.urls')),
+    path('api/productos/',include ('productos.urls')),
     re_path(r'^ckeditor/', include('ckeditor_uploader.urls')),
     path('contact/',include ('contact.urls')),
-]
+    path('api/plantas/', include('plantas.urls')),
+
+    # Swagger UI
+    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 
 if settings.DEBUG:
-    from django.conf.urls.static import static
+    
     urlpatterns += static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

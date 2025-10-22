@@ -1,0 +1,90 @@
+# === Django ===
+*.log
+*.pot
+*.pyc
+__pycache__/
+db.sqlite3
+media/
+staticfiles/
+.env
+.env.*
+
+# === Django Migrations ===
+*/migrations/__pycache__/
+*/migrations/*.py[cod]
+*/migrations/*.py
+!*/migrations/__init__.py
+
+# === Virtual Environment ===
+venv/
+env/
+ENV/
+.venv/
+
+# === Python ===
+*.py[cod]
+*$py.class
+__pycache__/
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# === IDEs ===
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# === OS Files ===
+.DS_Store
+Thumbs.db
+
+# === Coverage / Testing ===
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# === Pipenv / Poetry ===
+Pipfile.lock
+poetry.lock
+
+# === MyPy / Pyre / Ruff ===
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pyre/
+.ruff_cache/
+
+# === Docker ===
+*.pid
+*.pid.lock
+docker-compose.override.yml
+
+# === Local Scripts or Secrets ===
+*.bak
+*.swp
+*.swo
+secrets.json
+config.json
+local_settings.py

@@ -1,90 +1,55 @@
+from plantas.serializers import PlantaSerializer
 from .models import Producto
-from django.views.generic import DetailView
-from django.shortcuts import render
-from django.views.generic import ListView
-from .forms import ProductoForm
-from django.urls import reverse
-from django.http import HttpResponseRedirect
-from django.core import serializers
+from plantas.models import Planta
+from productos.serializers import ProductoSerializer
+from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.response import Response
+from rest_framework.decorators import action
+from drf_yasg.utils import swagger_auto_schema
+from rest_framework import filters
+from rest_framework import status
+from django.db.models import Q
 
+class ProductoAPIView(viewsets.ModelViewSet):
+    queryset = Producto.objects.all()
+    serializer_class = ProductoSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    filter_backends = [filters.SearchFilter]
+    
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        search = self.request.query_params.get('search')
 
-class ProductoDetailView(DetailView):
+        if search:
+            queryset = queryset.filter(
+                Q(nombre__icontains=search) |
+                Q(plantas__indicaciones__sintomas__icontains=search)
+            )
 
-    model = Producto
-    template_name = 'productos/producto.html'
-    def get_context_data(self, **kwargs):  # método para que aparezcan los votos y las estrellas en la puntuación:
-        context = super().get_context_data(**kwargs)
-        producto=self.object.evidencias.all()
-        evidenciasjson=serializers.serialize('json',producto)
-        if self.object.puntoextra:
-            puntoextra=self.object.puntoextra
-        else:
-            puntoextra=0
-        context['evidenciasjson'] = evidenciasjson
-        context['puntoextra'] = puntoextra
-        return context
+        return queryset.distinct()
+    
+    @swagger_auto_schema(
+        method='get',
+        operation_summary="Devuelve las 3 últimos productos añadidos",
+        operation_description="API para devolver las 3 productos añadidas",
+        responses={200: ProductoSerializer(many=True)},
+    )
+    @action(detail=False, methods=["get"], url_path='productoHome')
+    def productoHome(self, request):
+        productos = Producto.objects.filter(fitomanager=False).order_by('-id')[:4]
+        productos = ProductoSerializer(productos, many=True,context={'request': request}).data
+        return Response(productos)
 
-class ProductosViews(ListView):
-    model = Producto
-    template_name = "productos/productoslist.html"
-    paginate_by = 12
+    def custom_retrieve(self, request, pk=None):
+        try:
+            producto = Producto.objects.get(id=pk)
+            producto.save()  # Actualiza el precio al recuperar el producto
+        except Producto.DoesNotExist:
+            return Response({'error': 'Producto no encontrado'}, status=status.HTTP_404_NOT_FOUND)
 
-    def get_context_data(self, **kwargs):  # método para que aparezcan los votos y las estrellas en la puntuación:
-        context = super().get_context_data(**kwargs)
-        form = ProductoForm()
-        context['form'] = form
-        return context
+        serializer = ProductoSerializer(producto, context={'request': request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
 
-
-
-
-
-def comparador(request):
-    idlist=request.POST.getlist('seleccion[]')
-    if len(idlist)<=10 and len(idlist)>=2:
-        productos= Producto.objects.filter(id__in=idlist)
-        return render (request, "productos/comparador.html",{'productos':productos})
-    else:
-        return render (request, "productos/comparador.html")
-
-def filtradoproductos(request):
-    from indicaciones.models import Indicacion
-    from plantas.models import Planta
-    plantas= request.POST.get('plantas')
-    indicaciones= request.POST.get('indicaciones')
-    if plantas=='' and indicaciones!='':
-        object_list=Producto.objects.filter(indicaciones__id=indicaciones)
-    if plantas !='' and indicaciones=='':
-        object_list=Producto.objects.filter(plantas__id=plantas)
-    if plantas =='' and indicaciones=='':
-        object_list=Producto.objects.all()
-    if plantas !='' and indicaciones !='':
-        object_list=Producto.objects.filter(plantas__id=plantas, indicaciones__id=indicaciones)
-
-    if indicaciones !='':
-        indicacion=Indicacion.objects.get(id=indicaciones)
-
-    else:
-        indicacion=None
-
-    if plantas !='':
-        planta=Planta.objects.get(id=plantas)
-    else:
-        planta=None
-
-    form=ProductoForm
-    return render (request, "productos/filtrado.html",{'object_list':object_list,'form':form,'planta':planta,'indicacion':indicacion})
-
-def buscadorproducto(request,*args,**kwargs):
-    from text_unidecode import unidecode
-    patologiasid=[]
-    for indicacion in Producto.objects.all():
-        indicacion.nombre=unidecode(u'{}'.format(indicacion.nombre)).lower()
-        busqueda=unidecode(u'{}'.format(request.POST.get('buscador'))).lower()
-        if busqueda in indicacion.nombre:
-            if indicacion.id not in patologiasid:
-                patologiasid.append(indicacion.id)
-
-    form=ProductoForm
-    productos= Producto.objects.filter(id__in=patologiasid)
-    return render (request,"productos/buscarproductos.html",{'object_list':productos,'form':form,'busqueda':request.POST.get('buscador')})
+    

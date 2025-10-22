@@ -1,12 +1,9 @@
-from django.urls import path
-from . import views
-from .views import *
-urlpatterns = [
 
+from .views import IndicacionesAPIView
+from rest_framework.routers import DefaultRouter
+from .views import DepartamentoIndicacionesAPIView
 
-    path('',PatologiasViews.as_view(), name="patologias"),
-    path('<int:pk>', IndicacionesDetailView.as_view(),name='patologia'),
-    path('buscarpatologia', views.buscadorpatologia,name='buscarpatologia'),
-    path('departamento/<int:category_id>/', views.category,name='departamento'),
-
-]
+router=DefaultRouter()
+router.register(r'indicaciones', IndicacionesAPIView, basename='indicaciones')
+router.register(r'departamentos', DepartamentoIndicacionesAPIView, basename='departamentos')
+urlpatterns = router.urls

@@ -1,14 +1,6 @@
-from django.urls import path
-from .views import *
-from . import views
+from .views import PlantasApiView
+from rest_framework import routers
 
-urlpatterns = [
-    #path modelo ficha
-    path('',views.plantas, name= 'plantas'),
-    path('planta/<int:pk>',PlantaUpdate.as_view(),name='plantasedit'),
-    path('etiqueta/<int:pk>/', views.plantasetiqueta,name='listaetiqueta'),
-
-
-
-
-]
+router = routers.DefaultRouter()
+router.register(r'', PlantasApiView, basename='plantas')
+urlpatterns = router.urls
