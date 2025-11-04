@@ -19,7 +19,8 @@ class Producto(models.Model):
         ('Biojoy','Biojoy'),
     )
 
-    nombre= models.CharField(unique=True, max_length=250)
+    nombre= models.CharField(max_length=250, blank=True, null=True)
+    autocomplete=models.BooleanField(default=True)
     fitomanager=models.BooleanField(default=False)
     descripcion= models.TextField(blank=True, null=True)
     plantas= models.ManyToManyField('plantas.Planta',related_name='productos',blank=True)
@@ -38,13 +39,14 @@ class Producto(models.Model):
     
     """ CAPTAR PVP DE PROMOFARMA"""
     def save(self, *args, **kwargs):
-        if not self.link or self.fitomanager:
+        if not self.link or self.fitomanager or not self.autocomplete:
             super(Producto, self).save(*args, **kwargs)
             return
         else:
             headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/125.0.0.0 Safari/537.36"}
             html = requests.get(self.link, headers=headers).text
             soup = BeautifulSoup(html, "html.parser")
+            self.nombre= soup.find("span", id="productTitle").text
         if (self.laboratorio=='Drasanvi'):
             data= scrapping_amazon_drasanvi(soup)
             self.descripcion= data['descripcion']
@@ -66,7 +68,7 @@ class Producto(models.Model):
             self.composicion= data['composicion']
             self.posologia= data['posologia']
         print(data)
-        self.nombre= soup.find("span", id="productTitle").text
+        
         price_entero = soup.find("span", class_="a-price-whole").text
         price_decimal = soup.find("span", class_="a-price-fraction").text
         image = soup.find("img", id="landingImage")
@@ -81,7 +83,7 @@ class Producto(models.Model):
         super(Producto, self).save(*args, **kwargs)
 
     class Meta():
-        ordering = ['-media','pvp']
+        ordering = ['-id']
 
 
 

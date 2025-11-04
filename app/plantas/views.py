@@ -42,7 +42,7 @@ class PlantasApiView(viewsets.ModelViewSet):
     )
     @action(detail=False, methods=["get"], url_path='plantasHome')
     def plantasHome(self, request):
-        plantas = Planta.objects.all()[:3]
+        plantas = Planta.objects.all().order_by('-id')[:3]
         plantas = PlantaSerializer(plantas, many=True,context={'request': request}).data
         return JsonResponse(plantas, safe=False)
     

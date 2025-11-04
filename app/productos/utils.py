@@ -82,6 +82,17 @@ def scrapping_amazon_soria(soup, *args, **kwargs):
     descripcion= items[0].get_text(strip=True)
     
     important_inf=soup.find("div", id="important-information")
+    if not important_inf:
+        for item in items:
+            if "ingredientes" in item.get_text().lower(): #coge el bloque de ingredientes con sus padres e hijos
+                ingredientes = item.prettify()
+            if "instrucciones" in item.get_text().lower():
+                posologia = item.get_text(strip=True)
+        return {
+            "descripcion": descripcion,
+            "composicion": ingredientes,
+            "posologia": posologia,
+        }
     items=important_inf.select("div.a-section.content")
     for item in items:
         if "ingredientes" in item.get_text().lower(): #coge el bloque de ingredientes con sus padres e hijos
