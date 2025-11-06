@@ -32,13 +32,15 @@ class Producto(models.Model):
     pvp= models.DecimalField(blank=True, null=True, max_digits=5, decimal_places=2)
     media= models.DecimalField(blank=True, null=True,validators=[MinValueValidator(1), MaxValueValidator(11)],max_digits=3, decimal_places=1)
     laboratorio= models.CharField(max_length=50, choices=lab_LIST, blank=True, null=True)
-
+    
+    class Meta():
+        ordering = ['-id']
 
     def __str__(self):
         return ('{}').format(self.nombre)
     
     """ CAPTAR PVP DE PROMOFARMA"""
-    def save(self, *args, **kwargs):
+   """  def save(self, *args, **kwargs):
         if not self.link or self.fitomanager or not self.autocomplete:
             super(Producto, self).save(*args, **kwargs)
             return
@@ -80,10 +82,9 @@ class Producto(models.Model):
             self.pvp = float(price.replace(",", ".").strip())
         else:
             self.pvp = 0
-        super(Producto, self).save(*args, **kwargs)
+        super(Producto, self).save(*args, **kwargs) """
 
-    class Meta():
-        ordering = ['-id']
+    
 
 
 
