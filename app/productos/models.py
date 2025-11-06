@@ -40,7 +40,7 @@ class Producto(models.Model):
         return ('{}').format(self.nombre)
     
     """ CAPTAR PVP DE PROMOFARMA"""
-   """  def save(self, *args, **kwargs):
+   def save(self, *args, **kwargs):
         if not self.link or self.fitomanager or not self.autocomplete:
             super(Producto, self).save(*args, **kwargs)
             return
@@ -82,7 +82,7 @@ class Producto(models.Model):
             self.pvp = float(price.replace(",", ".").strip())
         else:
             self.pvp = 0
-        super(Producto, self).save(*args, **kwargs) """
+        super(Producto, self).save(*args, **kwargs)
 
     
 
