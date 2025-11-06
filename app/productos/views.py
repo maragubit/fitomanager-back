@@ -41,15 +41,7 @@ class ProductoAPIView(viewsets.ModelViewSet):
         productos = ProductoSerializer(productos, many=True,context={'request': request}).data
         return Response(productos)
 
-    def custom_retrieve(self, request, pk=None):
-        try:
-            producto = Producto.objects.get(id=pk)
-            producto.save()  # Actualiza el precio al recuperar el producto
-        except Producto.DoesNotExist:
-            return Response({'error': 'Producto no encontrado'}, status=status.HTTP_404_NOT_FOUND)
-
-        serializer = ProductoSerializer(producto, context={'request': request})
-        return Response(serializer.data, status=status.HTTP_200_OK)
+    
     
 
     
